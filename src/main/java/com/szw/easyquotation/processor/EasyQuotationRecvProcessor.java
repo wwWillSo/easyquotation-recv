@@ -32,11 +32,18 @@ public class EasyQuotationRecvProcessor {
 			ConnectionFactory factory = new ConnectionFactory();  
 			factory.setHost("localhost");  
 			Connection connection = factory.newConnection();  
-			Channel channel = connection.createChannel();  
-//			channel.basicQos(0,1,false); //RabbitMQ客户端接受消息最大数量
 			
 			for (int i = 1 ; i < poolSize+1 ; i ++) {
-				threadPool.submit(new EasyQuotationRecvRunnable(redisTemplate, realTimeMarketdataRepository, connection.createChannel(), "mq-" + i)) ;
+				
+				String queueName = "mq-" + i ;
+				
+				Channel channel = connection.createChannel();  
+//				channel.basicQos(0,1,false); //RabbitMQ客户端接受消息最大数量
+				//声明队列，主要为了防止消息接收者先运行此程序，队列还不存在时创建队列。  
+				channel.exchangeDeclare("Clogs-"+queueName, "fanout") ;
+	    		channel.queueDeclare(queueName, false, false, false, null);  
+	    		channel.queueBind(queueName, "Clogs-"+queueName, queueName) ;
+				threadPool.submit(new EasyQuotationRecvRunnable(redisTemplate, realTimeMarketdataRepository, channel, queueName)) ;
 			}
 			
 //			threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository, connection.createChannel(), "mq-" + 1)) ;

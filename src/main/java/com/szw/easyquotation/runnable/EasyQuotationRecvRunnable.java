@@ -37,8 +37,6 @@ public class EasyQuotationRecvRunnable implements Callable<EasyQuotationRecvRunn
 	public EasyQuotationRecvRunnable call() {
 		try {
     		
-    		//声明队列，主要为了防止消息接收者先运行此程序，队列还不存在时创建队列。  
-    		channel.queueDeclare(QUEUE_NAME, false, false, false, null);  
     		System.out.println(" [线程"+Thread.currentThread().getId()+"] for " + QUEUE_NAME + " Waiting for messages. To exit press CTRL+C");  
     		
     		//创建队列消费者  
@@ -58,8 +56,8 @@ public class EasyQuotationRecvRunnable implements Callable<EasyQuotationRecvRunn
     			JSONObject obj = JSONObject.parseObject(message) ;
     			RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class) ;
     			marketdata.setUpdateTime(new Date());
-//    			if (QUEUE_NAME.equals("mq-1"))
-//    				System.out.println(" [线程"+Thread.currentThread().getId()+"] for " + QUEUE_NAME + " Received '" + message + "'");  
+    			if (marketdata.getStockcode().equals("000001"))
+    				System.out.println(" [线程"+Thread.currentThread().getId()+"] for " + QUEUE_NAME + " Received '" + message + "'");  
 //    			realTimeMarketdataRepository.save(marketdata) ;
     			redisTemplate.opsForValue().set(marketdata.getStockcode(), marketdata) ;
     		}  
