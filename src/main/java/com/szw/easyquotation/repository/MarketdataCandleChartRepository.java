@@ -3,9 +3,9 @@ package com.szw.easyquotation.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.szw.easyquotation.entity.RealTimeMarketdata;
+import com.szw.easyquotation.entity.MarketDataCandleChart;
 
 
 @Repository
-public interface RealTimeMarketdataRepository extends JpaRepository<RealTimeMarketdata, String> {
+public interface MarketdataCandleChartRepository extends JpaRepository<MarketDataCandleChart, String> {
 }

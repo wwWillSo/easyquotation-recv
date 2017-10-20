@@ -49,28 +49,6 @@ public class EasyQuotationRecvProcessor {
 				threadPool.submit(new EasyQuotationRecvRunnable(redisTemplate, realTimeMarketdataRepository, channel, queueName));
 			}
 
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 1)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 2)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 3)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 4)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 5)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 6)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 7)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 8)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 9)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 10)) ;
-			// threadPool.submit(new EasyQuotationRecvRunnable(realTimeMarketdataRepository,
-			// connection.createChannel(), "mq-" + 11)) ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

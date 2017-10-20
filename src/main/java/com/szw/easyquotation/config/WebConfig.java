@@ -1,4 +1,4 @@
-package com.szw.easyquotation;
+package com.szw.easyquotation.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,4 +11,9 @@ public class WebConfig {
 	public ServerEndpointExporter serverEndpointExporter() {
 		return new ServerEndpointExporter();
 	}
+
+	// @Bean(initMethod = "init")
+	// public RabbitMQRecv rabbitMQRecv() {
+	// return new RabbitMQRecv();
+	// }
 }

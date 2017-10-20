@@ -1,0 +1,31 @@
+package com.szw.easyquotation.util;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
+public class DateUtil {
+
+	public final static long MINUTE = 60 * 1000;
+
+	public static String format_yyyyMMddHHmmss(Date date) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		return sdf.format(date);
+
+	}
+
+	public static long countMinutes(Date end, Date start) {
+
+		long minute = (end.getTime() - start.getTime()) / MINUTE;
+
+		return minute;
+	}
+
+	public static void main(String args[]) throws Exception {
+		Date date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2017-11-06 13:00:44");
+		Date date2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2017-11-06 13:01:00");
+		System.out.println(countMinutes(date2, date1));
+	}
+}
