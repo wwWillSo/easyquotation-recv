@@ -39,7 +39,7 @@ public class EasyquotationRecvApplication {
 				RealTimeMarketdata data = (RealTimeMarketdata)redisTemplate.opsForValue().get("000001") ;
 				try {
 					if (now.compareTo(data.getNow()) != 0) {
-						System.out.println(data.getStockcode() + ":" + data.getNow());
+//						System.out.println(data.getStockcode() + ":" + data.getNow());
 						now = data.getNow() ;
 					}
 				} catch (Exception e) {
@@ -47,6 +47,7 @@ public class EasyquotationRecvApplication {
 				}
 			}
 		}).start() ;
+		
 	}
 	
 	public static void main(String[] args) {
