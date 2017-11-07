@@ -8,4 +8,6 @@ import com.szw.easyquotation.entity.MarketDataCandleChart;
 
 @Repository
 public interface MarketdataCandleChartRepository extends JpaRepository<MarketDataCandleChart, String> {
+
+	public MarketDataCandleChart findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(String stockcode, int chartType);
 }

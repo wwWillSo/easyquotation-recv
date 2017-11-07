@@ -1,21 +1,73 @@
 package com.szw.easyquotation.container;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.szw.easyquotation.entity.MarketDataCandleChart;
-import com.szw.easyquotation.entity.RealTimeMarketdata;
 
 
 public class ChartContainer {
 
-	public final static ConcurrentMap<String, Map<String, MarketDataCandleChart>> chart = new ConcurrentHashMap<String, Map<String, MarketDataCandleChart>>();
+	public final static int[] chartTypeArr = { 1, 3, 5, 10, 30, 60, 1440 };
 
-	public final static ConcurrentMap<String, RealTimeMarketdata> market = new ConcurrentHashMap<String, RealTimeMarketdata>();
+	@Autowired
+	private RedisTemplate redisTemplate;
 
-	public final static ConcurrentMap<String, RealTimeMarketdata> market_temp = new ConcurrentHashMap<String, RealTimeMarketdata>();
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
 
-	public final static int[] chatTypeArr = { 1, 3, 5, 10, 30, 60, 1440 };
+	public Map<String, Map<String, List<MarketDataCandleChart>>> initCodeMap() {
+		System.out.println("正在创建分时图redis...");
+		Map<String, Map<String, List<MarketDataCandleChart>>> codeMap = new HashMap<String, Map<String, List<MarketDataCandleChart>>>();
+
+		for (String code : retrieveStockCode()) {
+			Map<String, List<MarketDataCandleChart>> timeMap = new HashMap<String, List<MarketDataCandleChart>>();
+			for (int min : chartTypeArr) {
+				timeMap.put(min + "", new ArrayList<MarketDataCandleChart>());
+			}
+			codeMap.put(code, timeMap);
+		}
+		redisTemplate.opsForValue().set("chart", codeMap);
+		System.out.println("分时图redis创建成功...");
+		return codeMap;
+	}
+
+	public String[] retrieveStockCode() {
+		String all_codes = stringRedisTemplate.opsForValue().get("stockCodes");
+		String[] code_arr = all_codes.split(",");
+		return code_arr;
+	}
+
+	public Map<String, List<MarketDataCandleChart>> getCandleChartByCode(String code) {
+		try {
+			@SuppressWarnings("unchecked")
+			Map<String, Map<String, List<MarketDataCandleChart>>> codeMap = (HashMap<String, Map<String, List<MarketDataCandleChart>>>) redisTemplate
+					.opsForValue().get("chart");
+
+			if (null == codeMap) {
+				codeMap = initCodeMap();
+			}
+
+			Map<String, List<MarketDataCandleChart>> timeMap = codeMap.get(code);
+
+			return timeMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void saveTimeMap(String code, Map<String, List<MarketDataCandleChart>> timeMap) {
+		Map<String, Map<String, List<MarketDataCandleChart>>> codeMap = (HashMap<String, Map<String, List<MarketDataCandleChart>>>) redisTemplate.opsForValue()
+				.get("chart");
+		codeMap.put(code, timeMap);
+		redisTemplate.opsForValue().set("chart", codeMap);
+	}
 
 }

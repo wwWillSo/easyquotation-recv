@@ -48,9 +48,8 @@ public class NewEasyQuotationRecvRunnable implements Callable<NewEasyQuotationRe
 				JSONObject obj = JSONObject.parseObject(message);
 				RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
 				marketdata.setUpdateTime(new Date());
-				// if (marketdata.getStockcode().equals("000001"))
-				// System.out.println(" [线程" + Thread.currentThread().getId() + "] for " +
-				// QUEUE_NAME + " Received '" + message + "'");
+				if (marketdata.getStockcode().equals("000001"))
+					System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + QUEUE_NAME + " Received '" + message + "'");
 				// realTimeMarketdataRepository.save(marketdata);
 				redisTemplate.opsForValue().set(marketdata.getStockcode(), marketdata);
 

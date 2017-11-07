@@ -38,9 +38,11 @@ public class EasyquotationRecvApplication {
 	@PostConstruct
 	public void init() {
 
-		newEasyQuotationRecvProcessor.execute();
-		newEasyQuotationChartProcessor.execute();
+		// newEasyQuotationRecvProcessor.execute();
+		// newEasyQuotationChartProcessor.execute();
+	}
 
+	public void test() {
 		new Thread(() -> {
 			BigDecimal now = BigDecimal.ZERO;
 			while (true) {
@@ -55,7 +57,6 @@ public class EasyquotationRecvApplication {
 				}
 			}
 		}).start();
-
 	}
 
 	public static void main(String[] args) {

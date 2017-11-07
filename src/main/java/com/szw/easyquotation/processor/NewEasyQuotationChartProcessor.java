@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.szw.easyquotation.container.NewChartContainer;
 import com.szw.easyquotation.rabbitmq.RabbitMQRecv;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
-import com.szw.easyquotation.runnable.NewEasyQuotationChartRunnable;
+import com.szw.easyquotation.runnable.FinalEasyQuotationChartRunnable;
 
 
 @Service
@@ -32,12 +33,14 @@ public class NewEasyQuotationChartProcessor {
 
 			String queueName = "mq-all";
 
-			singleThreadPool.submit(new NewEasyQuotationChartRunnable(rabbitMQRecv, redisTemplate, MarketDataCandleChartRepository, queueName));
+			String[] codes = NewChartContainer.retrieveStockCode();
+
+			singleThreadPool.submit(new FinalEasyQuotationChartRunnable(MarketDataCandleChartRepository, rabbitMQRecv, queueName, codes));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			singleThreadPool.shutdown();
+			// singleThreadPool.shutdown();
 		}
 	}
 }

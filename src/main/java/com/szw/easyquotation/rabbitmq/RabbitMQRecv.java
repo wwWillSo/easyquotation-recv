@@ -65,4 +65,24 @@ public class RabbitMQRecv {
 
 		return message;
 	}
+
+	@SuppressWarnings("deprecation")
+	public String getMessage(String queueName, String keyword)
+			throws ShutdownSignalException, ConsumerCancelledException, IOException, InterruptedException, TimeoutException {
+		QueueingConsumer consumer = (QueueingConsumer) map.get(queueName);
+		if (null == consumer) {
+			consumer = getConsume(queueName);
+			map.put(queueName, consumer);
+		}
+		String message = null;
+		while (true) {
+
+			Delivery delivery = consumer.nextDelivery();
+			message = new String(delivery.getBody());
+			if (message.trim().indexOf("\"stockcode\":" + " \"" + keyword + "\"") == -1)
+				continue;
+
+			return message;
+		}
+	}
 }

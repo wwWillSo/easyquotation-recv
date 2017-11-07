@@ -1,8 +1,9 @@
 package com.szw.easyquotation.runnable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -11,38 +12,42 @@ import java.util.concurrent.TimeoutException;
 import org.springframework.beans.BeanUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.szw.easyquotation.container.NewChartContainer;
 import com.szw.easyquotation.entity.MarketDataCandleChart;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.rabbitmq.RabbitMQRecv;
+import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
 import com.szw.easyquotation.util.DateUtil;
+import com.szw.easyquotation.util.JdbcUtil;
 
 
-public class NewEasyQuotationChartRunnable implements Callable<NewEasyQuotationChartRunnable> {
+public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotationChartRunnable> {
 
 	// 队列名称
 	private String QUEUE_NAME = "cc";
-
-	private Channel channel = null;
 
 	private RabbitMQRecv rabbitMQRecv = null;
 
 	private String[] codes = null;
 
-	private int count = 0;
+	private Map<String, Object> set = new HashMap<String, Object>();
 
-	public NewEasyQuotationChartRunnable(RabbitMQRecv rabbitMQRecv, String queueName, String[] codes) {
+	private MarketdataCandleChartRepository marketdataCandleChartRepository = null;
+
+	public FinalEasyQuotationChartRunnable(MarketdataCandleChartRepository marketdataCandleChartRepository, RabbitMQRecv rabbitMQRecv, String queueName,
+			String[] codes) {
+		this.marketdataCandleChartRepository = marketdataCandleChartRepository;
 		this.rabbitMQRecv = rabbitMQRecv;
 		this.QUEUE_NAME = queueName;
 		this.codes = codes;
 	}
 
 	@Override
-	public NewEasyQuotationChartRunnable call() {
-
+	public FinalEasyQuotationChartRunnable call() {
+		Date now = new Date();
+		List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
 		System.out.println("分时图线程启动...订阅" + QUEUE_NAME);
 		while (true) {
 			String message = null;
@@ -71,56 +76,36 @@ public class NewEasyQuotationChartRunnable implements Callable<NewEasyQuotationC
 			JSONObject obj = JSONObject.parseObject(message);
 			RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
 
-			Map<String, List<MarketDataCandleChart>> timeMap = null;
-			try {
-
-				timeMap = NewChartContainer.getCandleChartByCode(marketdata.getStockcode());
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("创建分时图redis失败...");
+			if (null != set.get(marketdata.getStockcode())) {
 				continue;
 			}
 
-			Iterator<Map.Entry<String, List<MarketDataCandleChart>>> iterator = timeMap.entrySet().iterator();
-
-			while (iterator.hasNext()) {
-				Map.Entry<String, List<MarketDataCandleChart>> entry = iterator.next();
-				int min = Integer.parseInt(entry.getKey());
-				List<MarketDataCandleChart> list = entry.getValue();
-
-				if (0 == list.size()) {
-					MarketDataCandleChart chart = new MarketDataCandleChart();
-					BeanUtils.copyProperties(marketdata, chart);
-					chart.setChartType(min);
-					chart.setCreateTime(new Date());
-					chart.setUpdateTime(chart.getCreateTime());
-					list.add(chart);
-				} else {
-					// 获得最新记录
-					MarketDataCandleChart chart = list.get(list.size() - 1);
-					// 判断当前时间与最新记录的创建时间是否满足新增坐标条件
-					long mins = DateUtil.countMinutes(new Date(), chart.getCreateTime());
-					if (mins >= min) {
-						chart = new MarketDataCandleChart();
-						BeanUtils.copyProperties(marketdata, chart);
-						chart.setChartType(min);
-						chart.setCreateTime(new Date());
-						chart.setUpdateTime(chart.getCreateTime());
-						list.add(chart);
-					}
+			for (int min : NewChartContainer.chartTypeArr) {
+				MarketDataCandleChart chart = marketdataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(),
+						min);
+				if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
+					MarketDataCandleChart newChart = new MarketDataCandleChart();
+					BeanUtils.copyProperties(marketdata, newChart);
+					newChart.setChartType(min);
+					newChart.setCreateTime(new Date());
+					newChart.setUpdateTime(newChart.getCreateTime());
+					// 不能这么频繁，程序处理速度与数据库IO速度不匹配
+					// marketdataCandleChartRepository.save(newChart);
+					// 改成批处理
+					list.add(newChart);
 				}
-
-				timeMap.put(min + "", list);
 			}
 
-			NewChartContainer.saveTimeMap(marketdata.getStockcode(), timeMap);
-			count += 1;
-
-			if (count == codes.length) {
+			set.put(marketdata.getStockcode(), null);
+			if (set.size() % 100 == 0)
+				System.out.println(set.size() + "/" + codes.length);
+			if (set.size() == codes.length) {
 				System.out.println("分时图线程结束...订阅" + QUEUE_NAME);
 				break;
 			}
 		}
+
+		JdbcUtil.batchUpdate(list);
 		return null;
 
 	}
