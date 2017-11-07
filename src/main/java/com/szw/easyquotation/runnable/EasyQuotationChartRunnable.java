@@ -19,6 +19,7 @@ import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
 import com.szw.easyquotation.util.DateUtil;
 
 
+@Deprecated
 public class EasyQuotationChartRunnable implements Callable<EasyQuotationChartRunnable> {
 
 	// 队列名称

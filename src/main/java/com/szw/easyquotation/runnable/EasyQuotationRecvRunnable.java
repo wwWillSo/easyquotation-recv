@@ -12,6 +12,7 @@ import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
 
 
+@Deprecated
 public class EasyQuotationRecvRunnable implements Callable<EasyQuotationRecvRunnable> {
 
 	// 队列名称

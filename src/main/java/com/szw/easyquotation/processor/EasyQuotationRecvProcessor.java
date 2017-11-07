@@ -15,6 +15,7 @@ import com.szw.easyquotation.runnable.EasyQuotationRecvRunnable;
 
 
 @Service
+@Deprecated
 public class EasyQuotationRecvProcessor {
 
 	@Autowired

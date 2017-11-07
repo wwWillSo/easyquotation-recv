@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.szw.easyquotation.entity.RealTimeMarketdata;
-import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
+import com.szw.easyquotation.processor.NewEasyQuotationChartProcessor;
 import com.szw.easyquotation.processor.NewEasyQuotationRecvProcessor;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
 
@@ -30,7 +30,7 @@ public class EasyquotationRecvApplication {
 	private NewEasyQuotationRecvProcessor newEasyQuotationRecvProcessor;
 
 	@Autowired
-	private EasyQuotationChartProcessor easyQuotationChartProcessor;
+	private NewEasyQuotationChartProcessor newEasyQuotationChartProcessor;
 
 	@Autowired
 	private RedisTemplate redisTemplate;
@@ -39,7 +39,7 @@ public class EasyquotationRecvApplication {
 	public void init() {
 
 		newEasyQuotationRecvProcessor.execute();
-		// easyQuotationChartProcessor.execute();
+		newEasyQuotationChartProcessor.execute();
 
 		new Thread(() -> {
 			BigDecimal now = BigDecimal.ZERO;

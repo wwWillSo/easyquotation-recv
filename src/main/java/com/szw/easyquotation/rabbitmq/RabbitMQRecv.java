@@ -33,6 +33,7 @@ public class RabbitMQRecv {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public synchronized QueueingConsumer getConsume(String queueName)
 			throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException, TimeoutException {
 		factory.setHost(MQHost);
@@ -64,5 +65,4 @@ public class RabbitMQRecv {
 
 		return message;
 	}
-
 }

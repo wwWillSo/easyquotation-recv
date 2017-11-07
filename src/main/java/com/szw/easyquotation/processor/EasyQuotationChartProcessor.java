@@ -15,6 +15,7 @@ import com.szw.easyquotation.runnable.EasyQuotationChartRunnable;
 
 
 @Service
+@Deprecated
 public class EasyQuotationChartProcessor {
 
 	@Autowired
