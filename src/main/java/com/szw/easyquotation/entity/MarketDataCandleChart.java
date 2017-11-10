@@ -27,7 +27,7 @@ public class MarketDataCandleChart implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String id;
+	private Long id;
 
 	@Column(name = "chart_type")
 	private int chartType;			// 图表类型
@@ -61,10 +61,6 @@ public class MarketDataCandleChart implements Serializable {
 	public MarketDataCandleChart() {
 	}
 
-	public String getId() {
-		return this.id;
-	}
-
 	public Date getUpdateTime() {
 		return updateTime;
 	}
@@ -73,7 +69,11 @@ public class MarketDataCandleChart implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public void setId(String id) {
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
 		this.id = id;
 	}
 

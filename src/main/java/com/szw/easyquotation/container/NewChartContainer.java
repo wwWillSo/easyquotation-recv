@@ -25,16 +25,25 @@ public class NewChartContainer {
 				timeMap.put(min + "", new ArrayList<MarketDataCandleChart>());
 			}
 			codeMap.put(code, timeMap);
+			System.out.println("分时图创建成功...");
 		}
-		System.out.println("分时图创建成功...");
+
 		return codeMap;
 	}
 
 	public static String[] retrieveStockCode() {
 
-		String all_codes = SpringUtil.getBean("stringRedisTemplate", StringRedisTemplate.class).opsForValue().get("stockCodes");
-		String[] code_arr = all_codes.split(",");
-		return code_arr;
+		System.out.println("从redis中获取股票代码集...");
+
+		try {
+			String all_codes = SpringUtil.getBean("stringRedisTemplate", StringRedisTemplate.class).opsForValue().get("stockCodes");
+			String[] code_arr = all_codes.split(",");
+			return code_arr;
+		} catch (Exception e) {
+			System.out.println("redis中不存在股票代码集...");
+		}
+
+		return null;
 	}
 
 	public static Map<String, List<MarketDataCandleChart>> getCandleChartByCode(String code) {
