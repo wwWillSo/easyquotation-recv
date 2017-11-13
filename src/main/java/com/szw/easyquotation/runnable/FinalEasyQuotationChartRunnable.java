@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 
 import org.springframework.beans.BeanUtils;
 
-import com.szw.easyquotation.container.NewChartContainer;
+import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.MarketDataCandleChart;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
@@ -26,51 +26,68 @@ public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotat
 
 	private List<RealTimeMarketdata> dataList = null;
 
-	public FinalEasyQuotationChartRunnable(List<RealTimeMarketdata> dataList, MarketdataCandleChartRepository marketdataCandleChartRepository) {
+	private Date now = null;
+
+	public FinalEasyQuotationChartRunnable(List<RealTimeMarketdata> dataList, MarketdataCandleChartRepository marketdataCandleChartRepository, Date now) {
 		this.dataList = dataList;
 		this.marketdataCandleChartRepository = marketdataCandleChartRepository;
+		this.now = now;
 	}
 
 	@Override
 	public FinalEasyQuotationChartRunnable call() {
+		try {
+			List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
 
-		Date now = new Date();
-		List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
+			for (RealTimeMarketdata marketdata : dataList) {
 
-		for (RealTimeMarketdata marketdata : dataList) {
+				// long start = new Date().getTime();
 
-			// long start = new Date().getTime();
-
-			if (null != set.get(marketdata.getStockcode())) {
-				System.out.println(marketdata.getStockcode() + "重复了");
-				continue;
-			}
-
-			for (int min : NewChartContainer.chartTypeArr) {
-				MarketDataCandleChart chart = marketdataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(),
-						min);
-				if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
-					MarketDataCandleChart newChart = new MarketDataCandleChart();
-					BeanUtils.copyProperties(marketdata, newChart);
-					newChart.setChartType(min);
-					newChart.setCreateTime(new Date());
-					newChart.setUpdateTime(newChart.getCreateTime());
-					// 不能这么频繁，程序处理速度与数据库IO速度不匹配
-					// marketdataCandleChartRepository.save(newChart);
-					// 改成批处理
-					list.add(newChart);
+				if (null != set.get(marketdata.getStockcode())) {
+					System.out.println(marketdata.getStockcode() + "重复了");
+					continue;
 				}
+
+				for (int min : ChartContainer.chartTypeArr) {
+
+					MarketDataCandleChart chart = null;
+					// 当chartMap为空时，很大可能是因为程序重启了，为了避免一天生成两条日k的情况，需检查数据库
+					if (ChartContainer.chartMap.size() == 0 || null == ChartContainer.chartMap.get(marketdata.getStockcode())) {
+						chart = marketdataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(), min);
+					} else {
+						chart = ChartContainer.chartMap.get(marketdata.getStockcode()).get(min + "");
+					}
+
+					if (null == chart) {
+						// System.out.println("异常....chart为null...");
+					}
+
+					if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
+						MarketDataCandleChart newChart = new MarketDataCandleChart();
+						BeanUtils.copyProperties(marketdata, newChart);
+						newChart.setChartType(min);
+						newChart.setCreateTime(now);
+						newChart.setUpdateTime(newChart.getCreateTime());
+						// 不能这么频繁，程序处理速度与数据库IO速度不匹配
+						// marketdataCandleChartRepository.save(newChart);
+						// 改成批处理
+						list.add(newChart);
+					}
+				}
+
+				set.put(marketdata.getStockcode(), null);
+
+				// long end = new Date().getTime();
+				// System.out.println((end - start));
+
 			}
-
-			set.put(marketdata.getStockcode(), null);
-
-			// long end = new Date().getTime();
-			// System.out.println((end - start));
+			// System.out.println("执行完毕...");
+			SpringUtil.getBean("jdbcUtil", JdbcUtil.class).insertBatchFlush(list);
+			ChartContainer.genDataMap(list);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		// System.out.println("执行完毕...");
-		SpringUtil.getBean("jdbcUtil", JdbcUtil.class).insertBatchFlush(list);
 		return null;
-
 	}
 
 }

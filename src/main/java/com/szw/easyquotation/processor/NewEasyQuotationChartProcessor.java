@@ -7,18 +7,13 @@ import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
-import com.szw.easyquotation.rabbitmq.RabbitMQRecv;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
 import com.szw.easyquotation.runnable.FinalEasyQuotationChartRunnable;
 import com.szw.easyquotation.util.DateUtil;
-import com.szw.easyquotation.util.HttpClientUtils;
 import com.szw.easyquotation.util.ListUtil;
 
 
@@ -26,16 +21,11 @@ import com.szw.easyquotation.util.ListUtil;
 public class NewEasyQuotationChartProcessor {
 
 	@Autowired
-	private MarketdataCandleChartRepository MarketDataCandleChartRepository;
+	private MarketdataCandleChartRepository marketDataCandleChartRepository;
 
-	private int poolSize = 11;
+	private int poolSize = 8;
 	private ExecutorService threadPool = Executors.newFixedThreadPool(poolSize);
-
-	@Autowired
-	private RedisTemplate redisTemplate;
-
-	@Autowired
-	private RabbitMQRecv rabbitMQRecv;
+	// private ExecutorService threadPool = Executors.newSingleThreadExecutor();
 
 	@Value("${marketdata.webservice.host}")
 	private String marketdataUrl;
@@ -43,29 +33,28 @@ public class NewEasyQuotationChartProcessor {
 	public void execute() {
 
 		try {
-			System.out.println("分时图生成任务开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-			List<RealTimeMarketdata> dataList = getAllMarketdata();
 
-			List<List<RealTimeMarketdata>> list = ListUtil.averageAssign(dataList, 11);
+			Date now = DateUtil.resetZeroSeconds(new Date());
+
+			System.out.println("分时图生成任务开始..." + DateUtil.format_yyyyMMddHHmmss(now) + "...线程池对象：" + threadPool.toString());
+
+			List<RealTimeMarketdata> dataList = ChartContainer.getAllMarketdata(marketdataUrl);
+
+			// 切分行情列表
+			List<List<RealTimeMarketdata>> list = ListUtil.averageAssign(dataList, 8);
+
+			// 初始化ChartContainer(改为容器启动时自动初始化)
+			// ChartContainer.initDataMap(marketDataCandleChartRepository, dataList);
 
 			for (List<RealTimeMarketdata> l : list) {
 
-				threadPool.submit(new FinalEasyQuotationChartRunnable(l, MarketDataCandleChartRepository));
+				threadPool.submit(new FinalEasyQuotationChartRunnable(l, marketDataCandleChartRepository, now));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			// threadPool.shutdown();
 		}
-	}
-
-	public List<RealTimeMarketdata> getAllMarketdata() {
-		String entity = HttpClientUtils.doGet(marketdataUrl);
-		// System.out.println(entity);
-		JSONObject jsonObj = JSON.parseObject(entity);
-		JSONArray result = jsonObj.getJSONArray("marketdata");
-		List<RealTimeMarketdata> list = JSON.parseArray(result.toJSONString(), RealTimeMarketdata.class);
-		return list;
 	}
 
 }
