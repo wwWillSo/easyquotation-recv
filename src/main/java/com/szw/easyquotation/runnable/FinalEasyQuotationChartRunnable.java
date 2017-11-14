@@ -90,6 +90,7 @@ public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotat
 			}
 			// System.out.println("执行完毕...");
 			SpringUtil.getBean("jdbcUtil", JdbcUtil.class).insertBatchFlush(list);
+			System.out.println(list.size() + "条持久化完毕...");
 			ChartContainer.genDataMap(list);
 		} catch (Exception e) {
 			e.printStackTrace();

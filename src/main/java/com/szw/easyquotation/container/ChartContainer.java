@@ -26,6 +26,10 @@ public class ChartContainer {
 
 	public final static ConcurrentMap<String, Map<String, MarketDataCandleChart>> chartMap = new ConcurrentHashMap<String, Map<String, MarketDataCandleChart>>();
 
+	public static List<RealTimeMarketdata> dataList = null;
+
+	public static boolean hasbeenInit = false;
+
 	public static void genDataMap(List<MarketDataCandleChart> list) {
 
 		for (MarketDataCandleChart chart : list) {
@@ -41,29 +45,20 @@ public class ChartContainer {
 				chartMap.put(chart.getStockcode(), map);
 			}
 		}
-
-		System.out.println("chartMap初始化完成，data数量为：" + chartMap.size());
 	}
 
 	public static boolean initDataMap(MarketdataCandleChartRepository marketDataCandleChartRepository, List<RealTimeMarketdata> dataList) {
 		try {
+			long start = new Date().getTime();
 			Date now = DateUtil.resetZeroSeconds(new Date());
 			List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
 			for (RealTimeMarketdata marketdata : dataList) {
-				// long start = new Date().getTime();
+
 				for (int min : ChartContainer.chartTypeArr) {
 					MarketDataCandleChart chart = null;
-					// 当chartMap为空时，很大可能是因为程序重启了，为了避免一天生成两条日k的情况，需检查数据库
-					// if (ChartContainer.chartMap.size() == 0 || null ==
-					// ChartContainer.chartMap.get(marketdata.getStockcode())) {
-					chart = marketDataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(), min);
-					// } else {
-					// chart = ChartContainer.chartMap.get(marketdata.getStockcode()).get(min + "");
-					// }
 
-					if (null == chart) {
-						System.out.println("null == chart:" + marketdata.getStockcode());
-					}
+					// 当chartMap为空时，很大可能是因为程序重启了，为了避免一天生成两条日k的情况，需检查数据库
+					chart = marketDataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(), min);
 
 					if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
 						MarketDataCandleChart newChart = new MarketDataCandleChart();
@@ -71,11 +66,15 @@ public class ChartContainer {
 						list.add(newChart);
 					}
 				}
-				// long end = new Date().getTime();
-				// System.out.println((end - start));
+
 			}
 			ChartContainer.genDataMap(list);
+			long end = new Date().getTime();
+			System.out.println((end - start));
+			if (ChartContainer.chartMap.size() == ChartContainer.dataList.size())
+				ChartContainer.hasbeenInit = true;
 
+			System.out.println("chartMap初始化完成，data数量为：" + chartMap.size());
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -84,12 +83,16 @@ public class ChartContainer {
 	}
 
 	public static List<RealTimeMarketdata> getAllMarketdata(String marketdataUrl) {
-		String entity = HttpClientUtils.doGet(marketdataUrl);
-		// System.out.println(entity);
-		JSONObject jsonObj = JSON.parseObject(entity);
-		JSONArray result = jsonObj.getJSONArray("marketdata");
-		List<RealTimeMarketdata> list = JSON.parseArray(result.toJSONString(), RealTimeMarketdata.class);
-		return list;
+		if (null == ChartContainer.dataList) {
+
+			String entity = HttpClientUtils.doGet(marketdataUrl);
+			JSONObject jsonObj = JSON.parseObject(entity);
+			JSONArray result = jsonObj.getJSONArray("marketdata");
+			ChartContainer.dataList = JSON.parseArray(result.toJSONString(), RealTimeMarketdata.class);
+
+			return ChartContainer.dataList;
+		}
+		return ChartContainer.dataList;
 	}
 
 }

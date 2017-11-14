@@ -27,7 +27,6 @@ public class JdbcUtil {
 			}
 			em.flush();
 			em.clear();
-			System.out.println(list.size() + "条持久化完毕...");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

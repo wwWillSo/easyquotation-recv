@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.szw.easyquotation.entity.RealTimeMarketdata;
+import com.szw.easyquotation.processor.ChartContainerInitProcessor;
 import com.szw.easyquotation.processor.NewEasyQuotationChartProcessor;
 import com.szw.easyquotation.processor.NewEasyQuotationRecvProcessor;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
@@ -33,13 +34,16 @@ public class EasyquotationRecvApplication {
 	private NewEasyQuotationChartProcessor newEasyQuotationChartProcessor;
 
 	@Autowired
+	private ChartContainerInitProcessor chartContainerInitProcessor;
+
+	@Autowired
 	private RedisTemplate redisTemplate;
 
 	@PostConstruct
 	public void init() {
 
-		// newEasyQuotationRecvProcessor.execute();
-		// newEasyQuotationChartProcessor.execute();
+		chartContainerInitProcessor.execute();
+		newEasyQuotationRecvProcessor.execute();
 	}
 
 	public void test() {

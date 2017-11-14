@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.szw.easyquotation.processor.ChartContainerInitProcessor;
+import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.processor.NewEasyQuotationChartProcessor;
 
 
@@ -24,25 +24,14 @@ public class ChartJob {
 	@Autowired
 	private NewEasyQuotationChartProcessor newEasyQuotationChartProcessor;
 
-	@Autowired
-	private ChartContainerInitProcessor chartContainerInitProcessor;
-
-	private boolean flag = false;
-
 	@Scheduled(fixedRate = ONE_Minute)
 	public void fixedDelayJob() {
 
-		if (!flag) {
-			if (chartContainerInitProcessor.execute()) {
-				flag = true;
-				System.out.println("定时任务fixedDelayJob启动...");
-				newEasyQuotationChartProcessor.execute();
-			} else {
-				System.out.println("系统出错...");
-				System.exit(-1);
-			}
-		} else {
+		if (ChartContainer.hasbeenInit) {
+			System.out.println("定时任务fixedDelayJob启动...");
 			newEasyQuotationChartProcessor.execute();
+		} else {
+			System.out.println("chartContainer初始化任务未完成...");
 		}
 
 	}
