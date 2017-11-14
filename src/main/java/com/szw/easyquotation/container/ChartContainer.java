@@ -46,35 +46,41 @@ public class ChartContainer {
 	}
 
 	public static boolean initDataMap(MarketdataCandleChartRepository marketDataCandleChartRepository, List<RealTimeMarketdata> dataList) {
-		Date now = DateUtil.resetZeroSeconds(new Date());
-		List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
-		for (RealTimeMarketdata marketdata : dataList) {
-			// long start = new Date().getTime();
-			for (int min : ChartContainer.chartTypeArr) {
-				MarketDataCandleChart chart = null;
-				// 当chartMap为空时，很大可能是因为程序重启了，为了避免一天生成两条日k的情况，需检查数据库
-				if (ChartContainer.chartMap.size() == 0 || null == ChartContainer.chartMap.get(marketdata.getStockcode())) {
+		try {
+			Date now = DateUtil.resetZeroSeconds(new Date());
+			List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
+			for (RealTimeMarketdata marketdata : dataList) {
+				// long start = new Date().getTime();
+				for (int min : ChartContainer.chartTypeArr) {
+					MarketDataCandleChart chart = null;
+					// 当chartMap为空时，很大可能是因为程序重启了，为了避免一天生成两条日k的情况，需检查数据库
+					// if (ChartContainer.chartMap.size() == 0 || null ==
+					// ChartContainer.chartMap.get(marketdata.getStockcode())) {
 					chart = marketDataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(), min);
-				} else {
-					chart = ChartContainer.chartMap.get(marketdata.getStockcode()).get(min + "");
-				}
+					// } else {
+					// chart = ChartContainer.chartMap.get(marketdata.getStockcode()).get(min + "");
+					// }
 
-				if (null == chart) {
-					return false;
-				}
+					if (null == chart) {
+						System.out.println("null == chart:" + marketdata.getStockcode());
+					}
 
-				if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
-					MarketDataCandleChart newChart = new MarketDataCandleChart();
-					BeanUtils.copyProperties(marketdata, newChart);
-					list.add(newChart);
+					if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
+						MarketDataCandleChart newChart = new MarketDataCandleChart();
+						BeanUtils.copyProperties(marketdata, newChart);
+						list.add(newChart);
+					}
 				}
+				// long end = new Date().getTime();
+				// System.out.println((end - start));
 			}
-			// long end = new Date().getTime();
-			// System.out.println((end - start));
-		}
-		ChartContainer.genDataMap(list);
+			ChartContainer.genDataMap(list);
 
-		return true;
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public static List<RealTimeMarketdata> getAllMarketdata(String marketdataUrl) {
@@ -85,4 +91,5 @@ public class ChartContainer {
 		List<RealTimeMarketdata> list = JSON.parseArray(result.toJSONString(), RealTimeMarketdata.class);
 		return list;
 	}
+
 }

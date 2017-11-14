@@ -21,6 +21,7 @@ import com.szw.easyquotation.rabbitmq.RabbitMQRecv;
 import com.szw.easyquotation.util.DateUtil;
 
 
+@Deprecated
 public class NewEasyQuotationChartRunnable implements Callable<NewEasyQuotationChartRunnable> {
 
 	// 队列名称

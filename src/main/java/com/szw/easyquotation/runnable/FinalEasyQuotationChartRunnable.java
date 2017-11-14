@@ -52,7 +52,8 @@ public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotat
 
 					MarketDataCandleChart chart = null;
 					// 当chartMap为空时，很大可能是因为程序重启了，为了避免一天生成两条日k的情况，需检查数据库
-					if (ChartContainer.chartMap.size() == 0 || null == ChartContainer.chartMap.get(marketdata.getStockcode())) {
+					if (ChartContainer.chartMap.size() == 0 || null == ChartContainer.chartMap.get(marketdata.getStockcode())
+							|| null == ChartContainer.chartMap.get(marketdata.getStockcode()).get(min + "")) {
 						chart = marketdataCandleChartRepository.findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(marketdata.getStockcode(), min);
 					} else {
 						chart = ChartContainer.chartMap.get(marketdata.getStockcode()).get(min + "");
@@ -60,6 +61,12 @@ public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotat
 
 					if (null == chart) {
 						// System.out.println("异常....chart为null...");
+					}
+
+					if (null != chart && chart.getChartType() == 1440) {
+						// System.out.println(marketdata.getStockcode() + "1440旧时间：" +
+						// chart.getCreateTime());
+						// System.out.println(marketdata.getStockcode() + "1440新时间：" + now);
 					}
 
 					if (null == chart || DateUtil.countMinutes(now, chart.getCreateTime()) >= min) {
