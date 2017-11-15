@@ -43,7 +43,7 @@ public class EasyquotationRecvApplication {
 	public void init() {
 
 		chartContainerInitProcessor.execute();
-		newEasyQuotationRecvProcessor.execute();
+		// newEasyQuotationRecvProcessor.execute();
 	}
 
 	public void test() {

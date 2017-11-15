@@ -15,7 +15,4 @@ public interface MarketdataCandleChartRepository extends JpaRepository<MarketDat
 
 	public List<MarketDataCandleChart> findByStockcodeAndChartType(String stockcode, int chartType);
 
-	// @Query("FROM (FROM market_data_candle_chart b ORDER BY b.create_time DESC limit
-	// 10000000000000000000) a GROUP BY a.stockcode,a.chart_type")
-	// public List<MarketDataCandleChart> findAllNewData();
 }
