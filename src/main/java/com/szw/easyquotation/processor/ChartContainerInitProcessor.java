@@ -47,6 +47,8 @@ public class ChartContainerInitProcessor {
 			}
 			threadPool.shutdown();
 			threadPool.awaitTermination(1, TimeUnit.HOURS);
+			System.out.println("chartMap初始化完成，data数量为：" + ChartContainer.chartMap.size());
+			System.out.println("000001:" + ChartContainer.chartMap.get("000001").get(1 + "").getCreateTime());
 			System.out.println("chartContainer-init任务结束..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		} catch (Exception e) {
 			e.printStackTrace();

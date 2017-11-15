@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.szw.easyquotation.entity.MarketDataCandleChart;
+import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
 import com.szw.easyquotation.util.DateUtil;
 
@@ -17,6 +19,9 @@ public class PublicService {
 
 	@Autowired
 	private MarketdataCandleChartRepository marketdataCandleChartRepository;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 
 	public List<MarketDataCandleChart> retrieveMarketDataCandleChart(String stockcode, int chartType) {
 		return marketdataCandleChartRepository.findByStockcodeAndChartType(stockcode, chartType);
@@ -47,6 +52,10 @@ public class PublicService {
 		}
 
 		return charts;
+	}
+
+	public RealTimeMarketdata getMarketdataByCode(String stockcode) {
+		return (RealTimeMarketdata) redisTemplate.opsForValue().get(stockcode);
 	}
 
 }

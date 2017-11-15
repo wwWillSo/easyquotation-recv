@@ -42,8 +42,7 @@ public class EasyquotationRecvApplication {
 	@PostConstruct
 	public void init() {
 
-		chartContainerInitProcessor.execute();
-		// newEasyQuotationRecvProcessor.execute();
+		newEasyQuotationRecvProcessor.execute();
 	}
 
 	public void test() {
