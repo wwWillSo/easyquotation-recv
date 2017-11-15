@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.szw.easyquotation.rabbitmq.RabbitMQRecv;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
-import com.szw.easyquotation.runnable.NewEasyQuotationRecvRunnable;
+import com.szw.easyquotation.runnable.EasyQuotationRecvRunnable;
 
 
 @Service
-public class NewEasyQuotationRecvProcessor {
+public class EasyQuotationRecvProcessor {
 
 	@Autowired
 	private RealTimeMarketdataRepository realTimeMarketdataRepository;
@@ -33,7 +33,7 @@ public class NewEasyQuotationRecvProcessor {
 
 			for (int i = 1; i < poolSize + 1; i++) {
 				String queueName = "mq-" + i;
-				threadPool.submit(new NewEasyQuotationRecvRunnable(rabbitMQRecv, redisTemplate, realTimeMarketdataRepository, queueName));
+				threadPool.submit(new EasyQuotationRecvRunnable(rabbitMQRecv, redisTemplate, realTimeMarketdataRepository, queueName));
 			}
 
 		} catch (Exception e) {

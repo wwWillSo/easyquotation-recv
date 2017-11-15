@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.processor.ChartContainerInitProcessor;
-import com.szw.easyquotation.processor.NewEasyQuotationChartProcessor;
-import com.szw.easyquotation.processor.NewEasyQuotationRecvProcessor;
+import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
+import com.szw.easyquotation.processor.EasyQuotationRecvProcessor;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
 
 
@@ -28,10 +28,10 @@ public class EasyquotationRecvApplication {
 	private RealTimeMarketdataRepository realTimeMarketdataRepository;
 
 	@Autowired
-	private NewEasyQuotationRecvProcessor newEasyQuotationRecvProcessor;
+	private EasyQuotationRecvProcessor newEasyQuotationRecvProcessor;
 
 	@Autowired
-	private NewEasyQuotationChartProcessor newEasyQuotationChartProcessor;
+	private EasyQuotationChartProcessor newEasyQuotationChartProcessor;
 
 	@Autowired
 	private ChartContainerInitProcessor chartContainerInitProcessor;

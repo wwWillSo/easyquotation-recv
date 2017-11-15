@@ -18,7 +18,7 @@ import com.szw.easyquotation.util.JdbcUtil;
 import com.szw.easyquotation.util.SpringUtil;
 
 
-public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotationChartRunnable> {
+public class EasyQuotationChartRunnable implements Callable<EasyQuotationChartRunnable> {
 
 	private Map<String, Object> set = new HashMap<String, Object>();
 
@@ -28,14 +28,14 @@ public class FinalEasyQuotationChartRunnable implements Callable<FinalEasyQuotat
 
 	private Date now = null;
 
-	public FinalEasyQuotationChartRunnable(List<RealTimeMarketdata> dataList, MarketdataCandleChartRepository marketdataCandleChartRepository, Date now) {
+	public EasyQuotationChartRunnable(List<RealTimeMarketdata> dataList, MarketdataCandleChartRepository marketdataCandleChartRepository, Date now) {
 		this.dataList = dataList;
 		this.marketdataCandleChartRepository = marketdataCandleChartRepository;
 		this.now = now;
 	}
 
 	@Override
-	public FinalEasyQuotationChartRunnable call() {
+	public EasyQuotationChartRunnable call() {
 		try {
 			List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
 

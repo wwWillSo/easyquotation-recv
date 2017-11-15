@@ -11,7 +11,7 @@ import com.szw.easyquotation.rabbitmq.RabbitMQRecv;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
 
 
-public class NewEasyQuotationRecvRunnable implements Callable<NewEasyQuotationRecvRunnable> {
+public class EasyQuotationRecvRunnable implements Callable<EasyQuotationRecvRunnable> {
 
 	// 队列名称
 	private String QUEUE_NAME = "cc";
@@ -22,7 +22,7 @@ public class NewEasyQuotationRecvRunnable implements Callable<NewEasyQuotationRe
 
 	private RabbitMQRecv rabbitMQRecv = null;
 
-	public NewEasyQuotationRecvRunnable(RabbitMQRecv rabbitMQRecv, RedisTemplate redisTemplate, RealTimeMarketdataRepository realTimeMarketdataRepository,
+	public EasyQuotationRecvRunnable(RabbitMQRecv rabbitMQRecv, RedisTemplate redisTemplate, RealTimeMarketdataRepository realTimeMarketdataRepository,
 			String queueName) {
 		this.rabbitMQRecv = rabbitMQRecv;
 		this.realTimeMarketdataRepository = realTimeMarketdataRepository;
@@ -31,7 +31,7 @@ public class NewEasyQuotationRecvRunnable implements Callable<NewEasyQuotationRe
 	}
 
 	@Override
-	public NewEasyQuotationRecvRunnable call() {
+	public EasyQuotationRecvRunnable call() {
 
 		// long startTime = System.currentTimeMillis() ;
 

@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
-import com.szw.easyquotation.runnable.FinalEasyQuotationChartRunnable;
+import com.szw.easyquotation.runnable.EasyQuotationChartRunnable;
 import com.szw.easyquotation.util.DateUtil;
 import com.szw.easyquotation.util.ListUtil;
 
 
 @Service
-public class NewEasyQuotationChartProcessor {
+public class EasyQuotationChartProcessor {
 
 	@Autowired
 	private MarketdataCandleChartRepository marketDataCandleChartRepository;
@@ -48,7 +48,7 @@ public class NewEasyQuotationChartProcessor {
 
 			for (List<RealTimeMarketdata> l : list) {
 
-				threadPool.submit(new FinalEasyQuotationChartRunnable(l, marketDataCandleChartRepository, now));
+				threadPool.submit(new EasyQuotationChartRunnable(l, marketDataCandleChartRepository, now));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
