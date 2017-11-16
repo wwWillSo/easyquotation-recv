@@ -1,2 +1,3 @@
 # easyquotation-recv（接收端）
-easyquotation-recv
+
+需要先开启redis和python程序
