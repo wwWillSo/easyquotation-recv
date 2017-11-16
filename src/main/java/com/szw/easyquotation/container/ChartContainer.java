@@ -139,15 +139,12 @@ public class ChartContainer {
 	}
 
 	public static List<RealTimeMarketdata> getAllMarketdata(String marketdataUrl) {
-		if (null == ChartContainer.dataList) {
 
-			String entity = HttpClientUtils.doGet(marketdataUrl);
-			JSONObject jsonObj = JSON.parseObject(entity);
-			JSONArray result = jsonObj.getJSONArray("marketdata");
-			ChartContainer.dataList = JSON.parseArray(result.toJSONString(), RealTimeMarketdata.class);
+		String entity = HttpClientUtils.doGet(marketdataUrl);
+		JSONObject jsonObj = JSON.parseObject(entity);
+		JSONArray result = jsonObj.getJSONArray("marketdata");
+		ChartContainer.dataList = JSON.parseArray(result.toJSONString(), RealTimeMarketdata.class);
 
-			return ChartContainer.dataList;
-		}
 		return ChartContainer.dataList;
 	}
 
