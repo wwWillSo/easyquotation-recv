@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +56,20 @@ public class EasyQuotationChartProcessor {
 		} finally {
 			// threadPool.shutdown();
 		}
+	}
+
+	public boolean shutdown() {
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(1, TimeUnit.HOURS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			threadPool.isTerminated();
+		}
+
+		return threadPool.isShutdown();
 	}
 
 }

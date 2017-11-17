@@ -1,5 +1,7 @@
 package com.szw.easyquotation.cronjob;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.processor.ChartContainerInitProcessor;
 import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
+import com.szw.easyquotation.util.DateUtil;
 
 
 /**
@@ -28,11 +31,19 @@ public class ChartJob {
 	@Autowired
 	private ChartContainerInitProcessor chartContainerInitProcessor;
 
-	@Scheduled(fixedRate = ONE_Minute)
-	public void fixedDelayJob() {
+	@Scheduled(cron = "0 0/1 9-11 ? * MON-FRI ")
+	public void openMarketMorning() {
+
+		if (DateUtil.isBefore(new Date(), DateUtil.getTime(9, 30, 0))) {
+			return;
+		}
+
+		if (DateUtil.isAfter(new Date(), DateUtil.getTime(11, 30, 0))) {
+			return;
+		}
 
 		if (ChartContainer.hasbeenInit) {
-			System.out.println("定时任务fixedDelayJob启动...");
+			System.out.println("早上定时任务启动...");
 			newEasyQuotationChartProcessor.execute();
 		} else {
 			System.out.println("chartContainer初始化任务未完成...");
@@ -40,5 +51,38 @@ public class ChartJob {
 		}
 
 	}
+
+	// @Scheduled(cron = "0 30 11 ? * MON-FRI ")
+	// public void closeMarketMorning() {
+	// System.out.println("早上定时任务关闭...");
+	// if (newEasyQuotationChartProcessor.shutdown()) {
+	// System.out.println("关闭成功...");
+	// }
+	// }
+
+	@Scheduled(cron = "0 0/1 13-15 ? * MON-FRI ")
+	public void openMarketAfternoon() {
+
+		if (DateUtil.isAfter(new Date(), DateUtil.getTime(15, 0, 0))) {
+			return;
+		}
+
+		if (ChartContainer.hasbeenInit) {
+			System.out.println("下午定时任务启动...");
+			newEasyQuotationChartProcessor.execute();
+		} else {
+			System.out.println("chartContainer初始化任务未完成...");
+			chartContainerInitProcessor.execute();
+		}
+
+	}
+
+	// @Scheduled(cron = "0 0 15 ? * MON-FRI ")
+	// public void closeMarketAfternoon() {
+	// System.out.println("下午定时任务关闭...");
+	// if (newEasyQuotationChartProcessor.shutdown()) {
+	// System.out.println("关闭成功...");
+	// }
+	// }
 
 }
