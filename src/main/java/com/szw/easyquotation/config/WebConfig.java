@@ -3,6 +3,7 @@ package com.szw.easyquotation.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Configuration
+@PropertySource(value = { "file:${user.dir}/config/persistence.properties", "file:${user.dir}/config/redis.properties" })
 public class WebConfig {
 
 	@Autowired

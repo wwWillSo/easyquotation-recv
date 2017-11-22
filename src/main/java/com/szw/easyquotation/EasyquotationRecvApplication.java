@@ -14,6 +14,7 @@ import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.processor.ChartContainerInitProcessor;
 import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
 import com.szw.easyquotation.processor.EasyQuotationRecvProcessor;
+import com.szw.easyquotation.processor.ZmqEasyQuotationRecvProcessor;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
 
 
@@ -37,12 +38,15 @@ public class EasyquotationRecvApplication {
 	private ChartContainerInitProcessor chartContainerInitProcessor;
 
 	@Autowired
+	private ZmqEasyQuotationRecvProcessor zmqEasyQuotationRecvProcessor;
+
+	@Autowired
 	private RedisTemplate redisTemplate;
 
 	@PostConstruct
 	public void init() {
 
-		newEasyQuotationRecvProcessor.execute();
+		zmqEasyQuotationRecvProcessor.execute();
 	}
 
 	public void test() {
