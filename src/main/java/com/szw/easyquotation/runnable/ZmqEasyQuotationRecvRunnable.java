@@ -49,9 +49,9 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 				RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
 				marketdata.setUpdateTime(new Date());
 
-				if (marketdata.getStockcode().equals("000001")) {
-					System.out.println(" [线程" + Thread.currentThread().getId() + "]" + message);
-				}
+				// if (marketdata.getStockcode().equals("000001")) {
+				// System.out.println(" [线程" + Thread.currentThread().getId() + "]" + message);
+				// }
 
 				redisTemplate.opsForValue().set(marketdata.getStockcode(), marketdata);
 
