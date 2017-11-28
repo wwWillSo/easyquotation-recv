@@ -68,6 +68,7 @@ public class EasyquotationRecvApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EasyquotationRecvApplication.class, args);
+
 	}
 
 }

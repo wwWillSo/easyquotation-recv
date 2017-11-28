@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.MarketDataCandleChart;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
+import com.szw.easyquotation.processor.DailyKLineProcessor;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
 import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
 import com.szw.easyquotation.service.PublicService;
@@ -25,6 +26,9 @@ public class MarketdataController {
 
 	@Autowired
 	private MarketdataCandleChartRepository marketdataCandleChartRepository;
+
+	@Autowired
+	private DailyKLineProcessor dailyKLineProcessor;
 
 	@Autowired
 	private PublicService publicService;
@@ -54,5 +58,13 @@ public class MarketdataController {
 	@ResponseBody
 	public List<RealTimeMarketdata> getChartFromPy(@PathVariable String stockcode) {
 		return ChartContainer.getAllMarketdata("http://127.0.0.1:8081/getAllMarketData");
+	}
+
+	@RequestMapping("/genKLineByHand")
+	@ResponseBody
+	public String test() {
+		dailyKLineProcessor.execute();
+
+		return "TRUE";
 	}
 }

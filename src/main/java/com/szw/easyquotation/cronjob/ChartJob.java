@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.processor.ChartContainerInitProcessor;
+import com.szw.easyquotation.processor.DailyKLineProcessor;
 import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
 import com.szw.easyquotation.util.DateUtil;
 
@@ -30,6 +31,9 @@ public class ChartJob {
 
 	@Autowired
 	private ChartContainerInitProcessor chartContainerInitProcessor;
+
+	@Autowired
+	private DailyKLineProcessor dailyKLineProcessor;
 
 	@Scheduled(cron = "0 0/1 9-11 ? * MON-FRI ")
 	public void openMarketMorning() {
@@ -75,6 +79,12 @@ public class ChartJob {
 			chartContainerInitProcessor.execute();
 		}
 
+	}
+
+	@Scheduled(cron = "0 30 16 ? * MON-FRI ")
+	public void genDailyKLine() {
+		System.out.println("日K生成任务启动...");
+		dailyKLineProcessor.execute();
 	}
 
 	// @Scheduled(cron = "0 0 15 ? * MON-FRI ")

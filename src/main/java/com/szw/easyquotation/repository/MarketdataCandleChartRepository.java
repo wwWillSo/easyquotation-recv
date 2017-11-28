@@ -1,5 +1,6 @@
 package com.szw.easyquotation.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,7 @@ public interface MarketdataCandleChartRepository extends JpaRepository<MarketDat
 	public MarketDataCandleChart findTopByStockcodeAndChartTypeOrderByCreateTimeDesc(String stockcode, int chartType);
 
 	public List<MarketDataCandleChart> findByStockcodeAndChartType(String stockcode, int chartType);
+
+	public MarketDataCandleChart findByStockcodeAndChartTypeAndCreateTime(String stockcode, int chartType, Date createTime);
 
 }

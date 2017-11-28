@@ -13,28 +13,33 @@ import org.springframework.stereotype.Service;
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
-import com.szw.easyquotation.runnable.ChartContainerInitRunnable;
+import com.szw.easyquotation.runnable.DailyKLineRunnable;
 import com.szw.easyquotation.util.DateUtil;
 import com.szw.easyquotation.util.ListUtil;
 
 
 @Service
-public class ChartContainerInitProcessor {
+public class DailyKLineProcessor {
 
 	@Autowired
 	private MarketdataCandleChartRepository marketDataCandleChartRepository;
 
 	private int poolSize = 8;
-	private ExecutorService threadPool = Executors.newFixedThreadPool(poolSize);
+	private ExecutorService threadPool = null;
 	// private ExecutorService threadPool = Executors.newSingleThreadExecutor();
 
 	@Value("${marketdata.webservice.host}")
 	private String marketdataUrl;
 
+	@Value("${marketdata.kLine.host}")
+	private String kLineUrl;
+
 	public boolean execute() {
 
 		try {
-			System.out.println("chartContainer-init任务开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+			System.out.println("dailyKLine任务开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+
+			threadPool = Executors.newFixedThreadPool(poolSize);
 
 			List<RealTimeMarketdata> dataList = ChartContainer.getAllMarketdata(marketdataUrl);
 
@@ -43,13 +48,11 @@ public class ChartContainerInitProcessor {
 
 			for (List<RealTimeMarketdata> l : list) {
 
-				threadPool.submit(new ChartContainerInitRunnable(marketDataCandleChartRepository, l));
+				threadPool.submit(new DailyKLineRunnable(marketDataCandleChartRepository, l, kLineUrl));
 			}
 			threadPool.shutdown();
-			threadPool.awaitTermination(1, TimeUnit.HOURS);
-			System.out.println("chartMap初始化完成，data数量为：" + ChartContainer.chartMap.size());
-			System.out.println("000001:" + ChartContainer.chartMap.get("000001").get(1 + "").getCreateTime());
-			System.out.println("chartContainer-init任务结束..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+			threadPool.awaitTermination(1, TimeUnit.DAYS);
+			System.out.println("dailyKLine任务结束..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
