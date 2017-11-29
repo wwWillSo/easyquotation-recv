@@ -37,7 +37,7 @@ function calculateMA(dayCount, data) {
     return result;
 }
 
-$.get('http://39.108.179.2:8080/retrieveKChart/000001/1', function (rawData) {
+$.get('http://39.108.179.2:8080/retrieveKChart/000001/1440', function (rawData) {
 
     var data = splitData(rawData);
 

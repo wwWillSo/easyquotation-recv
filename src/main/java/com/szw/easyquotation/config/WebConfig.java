@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Configuration
-@PropertySource(value = { "file:${user.dir}/config/persistence.properties", "file:${user.dir}/config/redis.properties" })
+@PropertySource(value = { "file:${user.dir}/config/persistence.properties", "file:${user.dir}/config/redis.properties", "file:${user.dir}/config/job.properties"})
 public class WebConfig {
 
 	@Autowired

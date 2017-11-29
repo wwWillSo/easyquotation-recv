@@ -32,6 +32,12 @@ public class MarketdataController {
 
 	@Autowired
 	private PublicService publicService;
+	
+	@RequestMapping("/getAllMarketdata")
+	@ResponseBody
+	public List<RealTimeMarketdata> getAllMarketData() {
+		return publicService.getAllMarketData() ;
+	}
 
 	@RequestMapping("/getMarketdataByCode/{stockcode}")
 	@ResponseBody

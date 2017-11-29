@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +36,15 @@ public class ChartJob {
 	@Autowired
 	private DailyKLineProcessor dailyKLineProcessor;
 
+	@Autowired
+	private Environment env ;
+	
 	@Scheduled(cron = "0 0/1 9-11 ? * MON-FRI ")
 	public void openMarketMorning() {
+		
+		if (!env.getProperty("chart.job.switch").equals("Y")) {
+			return ;
+		}
 
 		if (DateUtil.isBefore(new Date(), DateUtil.getTime(9, 30, 0))) {
 			return;
@@ -66,6 +74,10 @@ public class ChartJob {
 
 	@Scheduled(cron = "0 0/1 13-15 ? * MON-FRI ")
 	public void openMarketAfternoon() {
+		
+		if (!env.getProperty("chart.job.switch").equals("Y")) {
+			return ;
+		}
 
 		if (DateUtil.isAfter(new Date(), DateUtil.getTime(15, 0, 0))) {
 			return;
@@ -83,6 +95,11 @@ public class ChartJob {
 
 	@Scheduled(cron = "0 30 16 ? * MON-FRI ")
 	public void genDailyKLine() {
+		
+		if (!env.getProperty("kLine.job.switch").equals("Y")) {
+			return ;
+		}
+		
 		System.out.println("日K生成任务启动...");
 		dailyKLineProcessor.execute();
 	}
