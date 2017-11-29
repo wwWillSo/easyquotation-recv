@@ -22,6 +22,17 @@
 </head>
 <body>
 	
+	<div id="choose" style="width:1000px;margin-top:10px;">
+		<form>
+			输入股票代码:<input type="text" class="stockcode-textfield" name="stockcode"/>
+			<button type="button" class="btn default-btn choose-stockcode-btn">查询</button>
+		</form>
+	</div>
+	<div id="stock-desc">
+		<span class="stock-code"></span>
+		<span class="stock-name"></span>
+		<span class="chart-type"></span>
+	</div>
     <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
     <div id="main" style="width:1000px;height:800px;margin-left:auto;margin-right:auto;"></div>
    	
@@ -29,6 +40,7 @@
     <script src="../plugins/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
     <script src="../plugins/layer/layer.js"></script>
     <script src="../plugins/chart/echarts.js"></script>
+    <script src="../js/chart/genChart.js"></script>
     <script src="../js/chart/chart.js"></script>
 </body>
 </html>
