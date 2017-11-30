@@ -64,6 +64,22 @@ public class PublicService {
 	}
 
 	public List<RealTimeMarketdata> getAllMarketData() {
+		
+//		String data = (String)redisTemplate.opsForValue().get("stockCodes") ;
+//		
+//		String[] arr = data.split(",") ;
+//		
+//		List<RealTimeMarketdata> list = new ArrayList<RealTimeMarketdata>() ;
+//		
+//		for (String code : arr) {
+//			RealTimeMarketdata marketdata = (RealTimeMarketdata) redisTemplate.opsForValue().get(code);
+//			
+//			if (null == marketdata)
+//				continue ;
+//			
+//			list.add(marketdata) ;
+//		}
+		
 		return ChartContainer.getAllMarketdata(marketdataUrl) ;
 	}
 
