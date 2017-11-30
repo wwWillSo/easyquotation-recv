@@ -44,7 +44,7 @@ function genChart(url) {
 
 	    myChart.setOption(option = {
 	        backgroundColor: '#fff',
-	        animation: false,
+	        animation: true,
 	        legend: {
 	            bottom: 10,
 	            left: 'center',

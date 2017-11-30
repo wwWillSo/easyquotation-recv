@@ -5,23 +5,20 @@ import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.szw.easyquotation.repository.RealTimeMarketdataRepository;
+import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.runnable.ZmqEasyQuotationRecvRunnable;
+import com.szw.easyquotation.util.RedisCacheUtil;
 
 
 @Service
 public class ZmqEasyQuotationRecvProcessor {
 
-	@Autowired
-	private RealTimeMarketdataRepository realTimeMarketdataRepository;
-
 	private ExecutorService threadPool = Executors.newSingleThreadExecutor();
 
 	@Autowired
-	private RedisTemplate redisTemplate;
+	private RedisCacheUtil<RealTimeMarketdata> redisCacheUtil;
 
 	@Value("${marketdata.zeromq.host}")
 	private String zmqUrl;
@@ -32,7 +29,7 @@ public class ZmqEasyQuotationRecvProcessor {
 
 		try {
 
-			threadPool.submit(new ZmqEasyQuotationRecvRunnable(redisTemplate, zmqUrl, title));
+			threadPool.submit(new ZmqEasyQuotationRecvRunnable(redisCacheUtil, zmqUrl, title));
 
 		} catch (Exception e) {
 			e.printStackTrace();

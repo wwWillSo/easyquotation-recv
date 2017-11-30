@@ -21,6 +21,15 @@
     <link rel="stylesheet" href="../plugins/bootstrap-3.3.5-dist/css/bootstrap-theme.css"/>
 </head>
 <body>
+
+	输入页码:<input type="text" class="pageNo" name="pageNo" value="1"/>,每页条数:<input type="text" class="pageSize" name="pageSize" value="50"/>
+	<button type="button" class="btn default-btn search-btn">查询</button>
+	<button type="button" class="btn default-btn first-page-btn">第一页</button>
+	<button type="button" class="btn default-btn prev-page-btn">上一页</button>
+	<button type="button" class="btn default-btn next-page-btn">下一页</button>
+	<button type="button" class="btn default-btn last-page-btn">最后一页</button>
+	
+	<input type="hidden" class="lastPageNo"/>
 	
 	<table id="stock-list-table" border="1" style="width:80%;margin-left:auto;margin-right:auto;">
 		<tr class="first-line">
@@ -33,7 +42,7 @@
 			<td>now</td>
 		</tr>
 	</table>
-   	
+	
     <script src="../plugins/jquery/jquery-1.11.3.min.js"></script>
     <script src="../plugins/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
     <script src="../plugins/layer/layer.js"></script>

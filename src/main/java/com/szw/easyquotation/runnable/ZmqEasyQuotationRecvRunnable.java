@@ -3,25 +3,26 @@ package com.szw.easyquotation.runnable;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ.Socket;
 
 import com.alibaba.fastjson.JSONObject;
+import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
+import com.szw.easyquotation.util.RedisCacheUtil;
 
 
 public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRecvRunnable> {
 
-	private RedisTemplate redisTemplate;
+	private RedisCacheUtil redisCacheUtil;
 
 	private String zmqUrl;
 
 	private String title;
 
-	public ZmqEasyQuotationRecvRunnable(RedisTemplate redisTemplate, String zmqUrl, String title) {
-		this.redisTemplate = redisTemplate;
+	public ZmqEasyQuotationRecvRunnable(RedisCacheUtil redisCacheUtil, String zmqUrl, String title) {
+		this.redisCacheUtil = redisCacheUtil;
 		this.zmqUrl = zmqUrl;
 		this.title = title;
 	}
@@ -39,6 +40,7 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 			System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
 
 			while (true) {
+
 				String msg = subscriber.recvStr();
 				String message = msg.substring(msg.lastIndexOf("{"));
 
@@ -53,8 +55,9 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 				// System.out.println(" [线程" + Thread.currentThread().getId() + "]" + message);
 				// }
 
-				redisTemplate.opsForValue().set(marketdata.getStockcode(), marketdata);
+				redisCacheUtil.setCacheObject(marketdata.getStockcode(), marketdata);
 
+				ChartContainer.marketdataMap.put(marketdata.getStockcode(), marketdata);
 			}
 		} catch (Exception e) {
 			System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");

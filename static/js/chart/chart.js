@@ -1,16 +1,36 @@
 ;
 $(document).ready(function(){
-
-	$('.choose-stockcode-btn').click(function () {
-		var stockcode = $('.stockcode-textfield').val() ;
-		if (stockcode == '') {
-			stockcode = '000001'
-		}
 		
-		genKLineChart(stockcode, 1440)
-	})
+	var stockcode = GetQueryString(stockcode)
+	
+	genKLineChart(stockcode, 1440)
 })
 
+/**
+ * 获取页面参数
+ * @param name
+ * @returns
+ */
+function GetQueryString(name)
+{
+    var url = window.location.href
+    
+    var pos = url.indexOf("?" + name + "=")
+    
+    var param = url.substr(pos-5)
+
+    return param
+}
+
+/**
+ * 补零方法
+ * @param num
+ * @param length
+ * @returns
+ */
+function PrefixInteger(num, length) {
+	return (Array(length).join('0') + num).slice(-length);
+}
 
 function genKLineChart(stockcode, chartType) {
 	

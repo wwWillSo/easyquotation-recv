@@ -20,62 +20,62 @@ import com.alibaba.fastjson.annotation.JSONField;
  * 
  */
 @Entity
-@Table(name="real_time_marketdata")
-@NamedQuery(name="RealTimeMarketdata.findAll", query="SELECT r FROM RealTimeMarketdata r")
+@Table(name = "real_time_marketdata")
+@NamedQuery(name = "RealTimeMarketdata.findAll", query = "SELECT r FROM RealTimeMarketdata r")
 public class RealTimeMarketdata implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	private String stockcode;
 
 	private BigDecimal ask1;
 
-	@Column(name="ask1_volume")
+	@Column(name = "ask1_volume")
 	private BigDecimal ask1Volume;
 
 	private BigDecimal ask2;
 
-	@Column(name="ask2_volume")
+	@Column(name = "ask2_volume")
 	private BigDecimal ask2Volume;
 
 	private BigDecimal ask3;
 
-	@Column(name="ask3_volume")
+	@Column(name = "ask3_volume")
 	private BigDecimal ask3Volume;
 
 	private BigDecimal ask4;
 
-	@Column(name="ask4_volume")
+	@Column(name = "ask4_volume")
 	private BigDecimal ask4Volume;
 
 	private BigDecimal ask5;
 
-	@Column(name="ask5_volume")
+	@Column(name = "ask5_volume")
 	private BigDecimal ask5Volume;
 
 	private BigDecimal bid1;
 
-	@Column(name="bid1_volume")
+	@Column(name = "bid1_volume")
 	private BigDecimal bid1Volume;
 
 	private BigDecimal bid2;
 
-	@Column(name="bid2_volume")
+	@Column(name = "bid2_volume")
 	private BigDecimal bid2Volume;
 
 	private BigDecimal bid3;
 
-	@Column(name="bid3_volume")
+	@Column(name = "bid3_volume")
 	private BigDecimal bid3Volume;
 
 	private BigDecimal bid4;
 
-	@Column(name="bid4_volume")
+	@Column(name = "bid4_volume")
 	private BigDecimal bid4Volume;
 
 	private BigDecimal bid5;
 
-	@Column(name="bid5_volume")
+	@Column(name = "bid5_volume")
 	private BigDecimal bid5Volume;
 
 	private BigDecimal buy;
@@ -83,7 +83,7 @@ public class RealTimeMarketdata implements Serializable {
 	private BigDecimal close;
 
 	@Temporal(TemporalType.DATE)
-	@JSONField(format="yyyy-MM-dd")
+	@JSONField(format = "yyyy-MM-dd")
 	private Date date;
 
 	private BigDecimal high;
@@ -98,13 +98,13 @@ public class RealTimeMarketdata implements Serializable {
 
 	private BigDecimal sell;
 
-	@JSONField(format="HH:mm:ss", serializeUsing=Date.class)
+	@JSONField(format = "HH:mm:ss", serializeUsing = Date.class)
 	private Date time;
 
 	private BigDecimal turnover;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="update_time")
+	@Column(name = "update_time")
 	private Date updateTime;
 
 	private BigDecimal volume;
@@ -383,5 +383,4 @@ public class RealTimeMarketdata implements Serializable {
 	public void setVolume(BigDecimal volume) {
 		this.volume = volume;
 	}
-
 }

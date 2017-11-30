@@ -3,12 +3,17 @@ package com.szw.easyquotation.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.szw.easyquotation.bean.AllMarketDataJsonResp;
+import com.szw.easyquotation.bean.PageRequest;
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.MarketDataCandleChart;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
@@ -34,10 +39,20 @@ public class MarketdataController {
 	@Autowired
 	private PublicService publicService;
 
+	@Value("${user.password}")
+	private String userPass;
+
+	@RequestMapping("/")
+	public ModelAndView index(ModelAndView model) {
+
+		model.setViewName("redirect:/views/stockList.html");
+		return model;
+	}
+
 	@RequestMapping("/getAllMarketdata")
 	@ResponseBody
-	public List<RealTimeMarketdata> getAllMarketData() {
-		return publicService.getAllMarketData();
+	public AllMarketDataJsonResp getAllMarketData(@RequestBody PageRequest request) {
+		return publicService.getAllMarketData(request);
 	}
 
 	@RequestMapping("/getMarketdataByCode/{stockcode}")
@@ -68,7 +83,11 @@ public class MarketdataController {
 
 	@RequestMapping("/genKLineByHand")
 	@ResponseBody
-	public String test() {
+	public String test(String password) {
+
+		if (password.equals(userPass.equals(password)))
+			return "FALSE";
+
 		dailyKLineProcessor.execute();
 
 		return "TRUE";

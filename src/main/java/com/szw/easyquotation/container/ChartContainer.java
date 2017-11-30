@@ -29,6 +29,8 @@ public class ChartContainer {
 
 	public final static ConcurrentMap<String, Map<String, MarketDataCandleChart>> chartMap = new ConcurrentHashMap<String, Map<String, MarketDataCandleChart>>();
 
+	public final static ConcurrentMap<String, RealTimeMarketdata> marketdataMap = new ConcurrentHashMap<String, RealTimeMarketdata>();
+
 	public static List<RealTimeMarketdata> dataList = null;
 
 	public static boolean hasbeenInit = false;

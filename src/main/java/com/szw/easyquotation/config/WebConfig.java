@@ -8,6 +8,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -16,8 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Configuration
-@PropertySource(value = { "file:${user.dir}/config/persistence.properties", "file:${user.dir}/config/redis.properties", "file:${user.dir}/config/job.properties"})
-public class WebConfig {
+@PropertySource(value = { "file:${user.dir}/config/persistence.properties", "file:${user.dir}/config/redis.properties",
+		"file:${user.dir}/config/job.properties" })
+public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
@@ -49,6 +52,12 @@ public class WebConfig {
 		redisTemplate.afterPropertiesSet();
 
 		return redisTemplate;
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/view/**").addResourceLocations("classpath:/static/views");
+		super.addResourceHandlers(registry);
 	}
 
 }

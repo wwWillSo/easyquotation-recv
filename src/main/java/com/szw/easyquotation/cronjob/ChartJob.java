@@ -9,10 +9,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.szw.easyquotation.container.ChartContainer;
+import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.processor.ChartContainerInitProcessor;
 import com.szw.easyquotation.processor.DailyKLineProcessor;
 import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
 import com.szw.easyquotation.util.DateUtil;
+import com.szw.easyquotation.util.RedisCacheUtil;
 
 
 /**
@@ -37,13 +39,16 @@ public class ChartJob {
 	private DailyKLineProcessor dailyKLineProcessor;
 
 	@Autowired
-	private Environment env ;
-	
-	@Scheduled(cron = "0 0/1 9-11 ? * MON-FRI ")
+	private RedisCacheUtil<RealTimeMarketdata> redisCacheUtil;
+
+	@Autowired
+	private Environment env;
+
+	@Scheduled(cron = "${openMarketMorning}")
 	public void openMarketMorning() {
-		
+
 		if (!env.getProperty("chart.job.switch").equals("Y")) {
-			return ;
+			return;
 		}
 
 		if (DateUtil.isBefore(new Date(), DateUtil.getTime(9, 30, 0))) {
@@ -64,19 +69,11 @@ public class ChartJob {
 
 	}
 
-	// @Scheduled(cron = "0 30 11 ? * MON-FRI ")
-	// public void closeMarketMorning() {
-	// System.out.println("早上定时任务关闭...");
-	// if (newEasyQuotationChartProcessor.shutdown()) {
-	// System.out.println("关闭成功...");
-	// }
-	// }
-
-	@Scheduled(cron = "0 0/1 13-15 ? * MON-FRI ")
+	@Scheduled(cron = "${openMarketAfternoon}")
 	public void openMarketAfternoon() {
-		
+
 		if (!env.getProperty("chart.job.switch").equals("Y")) {
-			return ;
+			return;
 		}
 
 		if (DateUtil.isAfter(new Date(), DateUtil.getTime(15, 0, 0))) {
@@ -93,23 +90,23 @@ public class ChartJob {
 
 	}
 
-	@Scheduled(cron = "0 30 16 ? * MON-FRI ")
+	@Scheduled(cron = "${genDailyKLine}")
 	public void genDailyKLine() {
-		
+
 		if (!env.getProperty("kLine.job.switch").equals("Y")) {
-			return ;
+			return;
 		}
-		
+
 		System.out.println("日K生成任务启动...");
 		dailyKLineProcessor.execute();
 	}
 
-	// @Scheduled(cron = "0 0 15 ? * MON-FRI ")
-	// public void closeMarketAfternoon() {
-	// System.out.println("下午定时任务关闭...");
-	// if (newEasyQuotationChartProcessor.shutdown()) {
-	// System.out.println("关闭成功...");
-	// }
-	// }
+	@Scheduled(cron = "${genRealMarketdataMap}")
+	public void genRealMarketdataMap() {
+		if (!env.getProperty("zmqRecv.job.switch").equals("Y")) {
+			return;
+		}
+		redisCacheUtil.setCacheMap("marketdata", ChartContainer.marketdataMap);
+	}
 
 }
