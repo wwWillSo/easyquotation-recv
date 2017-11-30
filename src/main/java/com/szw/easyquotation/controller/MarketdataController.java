@@ -19,6 +19,7 @@ import com.szw.easyquotation.service.PublicService;
 
 
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class MarketdataController {
 
 	@Autowired
@@ -32,11 +33,11 @@ public class MarketdataController {
 
 	@Autowired
 	private PublicService publicService;
-	
+
 	@RequestMapping("/getAllMarketdata")
 	@ResponseBody
 	public List<RealTimeMarketdata> getAllMarketData() {
-		return publicService.getAllMarketData() ;
+		return publicService.getAllMarketData();
 	}
 
 	@RequestMapping("/getMarketdataByCode/{stockcode}")
@@ -51,7 +52,6 @@ public class MarketdataController {
 		return publicService.retrieveMarketDataCandleChart(stockcode, chartType);
 	}
 
-	@CrossOrigin(origins = "*", maxAge = 3600)
 	@RequestMapping("/retrieveKChart/{stockcode}/{chartType}")
 	@ResponseBody
 	public List<Object[]> retrieveKChart(@PathVariable String stockcode, @PathVariable int chartType) {
