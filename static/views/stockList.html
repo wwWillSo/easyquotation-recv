@@ -22,23 +22,21 @@
 </head>
 <body>
 	
-	<div id="choose" style="width:1000px;margin-top:10px;">
-		输入股票代码:<input type="text" class="stockcode-textfield" name="stockcode"/>
-		<button type="button" class="btn default-btn choose-stockcode-btn">查询</button>
-	</div>
-	<div id="stock-desc" style="display:table;margin-left:auto;margin-right:auto;">
-		<span class="stock-code" style="font: bold;"></span>
-		<span class="stock-name" style="font: bold;"></span>
-		<span class="chart-type" style="font: bold;"></span>
-	</div>
-    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-    <div id="main" style="width:800px;height:600px;margin-left:auto;margin-right:auto;"></div>
+	<table id="stock-list-table" border="1" style="width:80%;margin-left:auto;margin-right:auto;">
+		<tr class="first-line">
+			<td>stockcode</td>
+			<td>name</td>
+			<td>open</td>
+			<td>close</td>
+			<td>low</td>
+			<td>high</td>
+			<td>now</td>
+		</tr>
+	</table>
    	
     <script src="../plugins/jquery/jquery-1.11.3.min.js"></script>
     <script src="../plugins/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
     <script src="../plugins/layer/layer.js"></script>
-    <script src="../plugins/chart/echarts.js"></script>
-    <script src="../js/chart/genChart.js"></script>
-    <script src="../js/chart/chart.js"></script>
+    <script src="../js/stock/stockList.js"></script>
 </body>
 </html>
