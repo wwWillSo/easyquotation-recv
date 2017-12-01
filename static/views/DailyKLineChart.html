@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="../plugins/bootstrap-3.3.5-dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="../plugins/bootstrap-3.3.5-dist/css/bootstrap-theme.css"/>
 </head>
+<style>
+	td {
+		width:60px;
+		text-align: center;
+	}
+</style>
 <body>
 	
 <!-- 	<div id="choose" style="width:1000px;margin-top:10px;"> -->
@@ -31,14 +37,114 @@
 		<span class="stock-name" style="font: bold;"></span>
 		<span class="chart-type" style="font: bold;"></span>
 	</h2>
-    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-    <div id="main" style="width:800px;height:600px;margin-left:auto;margin-right:auto;"></div>
-   	
+	
+	<div style="margin-left:auto;margin-right:auto;">
+	    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+	    <span id="main" style="width:800px;height:600px;margin-left:150px;float: left;"></span>
+	    
+	    <div style="width:500px;margin-top:50px;float: right;">
+	    	<table border="1">
+	    		<tr>
+	    			<td colspan="3">行情报价</td>
+	    		</tr>
+	    		<tr id="sell5">
+	    			<td>卖五</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="sell4">
+	    			<td>卖四</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="sell3">
+	    			<td>卖三</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="sell2">
+	    			<td>卖二</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="sell1">
+	    			<td>卖一</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="3">-------</td>
+	    		</tr>
+	    		<tr id="buy1">
+	    			<td>买一</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="buy2">
+	    			<td>买二</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="buy3">
+	    			<td>买三</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="buy4">
+	    			<td>买四</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr id="buy5">
+	    			<td>买五</td>
+	    			<td></td>
+	    			<td></td>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="3">-------</td>
+	    		</tr>
+	    		<tr id="now">
+	    			<td>最新</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="percent">
+	    			<td>涨跌幅</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="turnover">
+	    			<td>总手</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="volume">
+	    			<td>金额</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="high">
+	    			<td>最高</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="low">
+	    			<td>最低</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="open">
+	    			<td>今开</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    		<tr id="close">
+	    			<td>昨收</td>
+	    			<td colspan="2"></td>
+	    		</tr>
+	    	</table>
+	    </div>
+    </div>
+    
     <script src="../plugins/jquery/jquery-1.11.3.min.js"></script>
     <script src="../plugins/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
     <script src="../plugins/layer/layer.js"></script>
     <script src="../plugins/chart/echarts.js"></script>
     <script src="../js/chart/genChart.js"></script>
     <script src="../js/chart/chart.js"></script>
+    <script src="../js/chart/socket.js"></script>
 </body>
 </html>

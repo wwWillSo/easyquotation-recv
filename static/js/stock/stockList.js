@@ -79,7 +79,7 @@ function retrieveStockList(pageNo, pageSize) {
 	}
 	var resp = null 
 	$.ajax({
-		url:'http://127.0.0.1:8091/getAllMarketdata',
+		url:'http://39.108.179.2:8080/getAllMarketdata',
 		contentType:"application/json",
 		type:'POST',
 		data:JSON.stringify(req),

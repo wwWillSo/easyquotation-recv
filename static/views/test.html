@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<body>
+
+	<table border="1">
+		<tr>
+			<td>stockCode</td>
+			<td>name</td>
+			<td>now</td>
+		</tr>
+		<tr>
+			<td id="stockCode"></td>
+			<td id="name"></td>
+			<td id="now"></td>
+		</tr>
+	</table>
+
+
+<script>
+
+function parseObj(strData) { //×ª»»¶ÔÏó
+		return (new Function("return " + strData))();
+	};
+
+
+var url1 = "ws://120.76.245.248:6660/marketDeepDataWebsocket"
+var url2 = "ws://120.76.245.248:6660/websocket"
+var url3 = "ws://117.78.47.84:5550/molinxuanWebsocket"
+
+var url4 = "ws://120.76.245.248:5555"
+
+var url5 = "ws://localhost:5550/molinxuanWebsocket"
+
+var url6 = "ws://localhost:6660/marketDeepDataWebsocket/SIN7"
+
+var url7 = "ws://localhost:6660/socketDemo2/CLN7"
+
+var url7 = "ws://localhost:6660/socketDemo2/CLN7"
+
+var url8 = "ws://117.78.47.84:5550/websocket"
+
+var url9 = "ws://39.108.68.203:5550/molinxuanWebsocket"
+
+var url10 = "ws://120.77.204.226:5550/molinxuanWebsocket"
+
+var url11 = "ws://120.76.245.248:6660/optionalSocketServer"
+
+var url12 = "ws://120.76.245.248:6660/optionalDeepSocketServer"
+
+var url13 = "ws://117.78.47.84:5550/molinxuanWebsocket"
+
+var url14 = "ws://47.52.69:6660/optionalDeepSocketServer"
+
+var url15 = "ws://39.108.179.2:8080/optionalDeepSocketServer"
+
+var ws = new WebSocket(url15);
+		ws.onopen = function()
+		{  console.log("open");
+		   ws.send("marketdata:000001");
+		};
+		ws.onmessage = function(evt)
+		{
+			//½«ÐÐÇéÊý¾Ý×ª³Éjson¸ñÊ½
+			var data = parseObj(evt.data).text
+			data = parseObj(data)
+			console.log(data)
+
+			document.getElementById("stockCode").innerHTML = data.stockcode
+			document.getElementById("name").innerHTML = data.name
+			document.getElementById("now").innerHTML = data.now
+		};
+		ws.onclose = function(evt)
+		{
+		  console.log("WebSocketClosed!");
+		};
+		ws.onerror = function(evt)
+		{
+		  console.log("WebSocketError!");
+		};
+</script>
+
+</body>
+
+<html>
