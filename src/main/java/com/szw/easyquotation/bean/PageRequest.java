@@ -10,6 +10,15 @@ public class PageRequest implements Serializable {
 	private static final long serialVersionUID = 1918560552649774353L;
 	private int pageNo;
 	private int pageSize;
+	private String keyword ;
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 
 	public int getPageNo() {
 		return pageNo;

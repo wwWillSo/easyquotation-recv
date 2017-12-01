@@ -7,6 +7,9 @@ $(document).ready(function(){
 	
 	$('.search-btn').click(function (e) {
 		e.preventDefault()
+		
+		setPageNo(1)
+		
 		emptyTable(table)
 		addStockTr(table)
 	})
@@ -52,6 +55,8 @@ $(document).ready(function(){
 		
 		if (getPageNo() == parseInt(lastPageNo)) {
 			setPageNo(lastPageNo)
+		} else if (lastPageNo == 0) {
+			setPageNo(1)
 		} else {
 			setPageNo(getPageNo() + 1)
 		}
@@ -72,10 +77,11 @@ function getPageNo() {
 	return parseInt(pageNo)
 }
 
-function retrieveStockList(pageNo, pageSize) {
+function retrieveStockList(pageNo, pageSize, keyword) {
 	var req = {
 		"pageNo" : pageNo-1,
-		"pageSize" : pageSize
+		"pageSize" : pageSize,
+		"keyword" : keyword
 	}
 	var resp = null 
 	$.ajax({
@@ -100,10 +106,12 @@ function retrieveStockList(pageNo, pageSize) {
 }
 
 function addStockTr(tab) {
+	
 	pageNo = $('.pageNo').val() 
 	pageSize = $('.pageSize').val() 
+	keyword = $('.keyword').val()
 	
-	var data = retrieveStockList(pageNo, pageSize)
+	var data = retrieveStockList(pageNo, pageSize, keyword)
 
 	var stockList = data.list
 	

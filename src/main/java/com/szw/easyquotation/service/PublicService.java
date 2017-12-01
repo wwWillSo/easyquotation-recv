@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.szw.easyquotation.bean.AllMarketDataJsonResp;
 import com.szw.easyquotation.bean.PageRequest;
@@ -81,10 +82,19 @@ public class PublicService {
 		String[] code_arr = stockCodes.split(",");
 
 		for (String code : code_arr) {
-			if (null == map.get(code)) {
-				list.add((RealTimeMarketdata) redisCacheUtil.getCacheObject(code));
+			RealTimeMarketdata data = map.get(code) ;
+			
+			if (null == data) {
+				data = (RealTimeMarketdata) redisCacheUtil.getCacheObject(code) ;
+			}
+			
+			//判断关键字
+			if (null != request.getKeyword() && !"".equals(request.getKeyword())) {
+				if (data.getStockcode().indexOf(request.getKeyword()) != -1 || data.getName().indexOf(request.getKeyword()) != -1) {
+					list.add(data) ;
+				}
 			} else {
-				list.add(map.get(code));
+				list.add(data) ;
 			}
 		}
 
