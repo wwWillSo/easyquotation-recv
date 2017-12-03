@@ -134,6 +134,8 @@ function addStockTr(tab) {
 		
 		addTr(tab, i, trHtml)
 	}
+	
+	$('#page-span').text(pageNo + '/' + lastPageNo)
 }
 
 function emptyTable(tab) {

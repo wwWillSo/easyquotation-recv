@@ -45,7 +45,7 @@ public class MarketdataController {
 	@RequestMapping("/")
 	public ModelAndView index(ModelAndView model) {
 
-		model.setViewName("redirect:/views/stockList.html");
+		model.setViewName("redirect:/views/index.html");
 		return model;
 	}
 

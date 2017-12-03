@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--将下面的<meta> 标签加入到页面中，可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>股票列表</title>
+    <!--favicon-->
+    <link rel="icon" href="../images/favicon-WillSo.ico" type="image/x-icon" />
+
+</head>
+<body>
+	<div id="main">
+		<span id="isPC">s</span>
+	</div>
+</body>
+<script>
+if (IsPC()) {
+	window.location.href = 'stockList.html'
+} else {
+	window.location.href = 'mobile/stockList.html'
+}
+function IsPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
+}
+</script>
+</html>

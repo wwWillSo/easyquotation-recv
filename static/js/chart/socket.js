@@ -12,8 +12,6 @@ function GetPercent(num, total) {
 	return total <= 0 ? "0%" : (Math.round(num / total * 10000) / 100.00 + "%"); 
 } 
 
-var now = 0
-
 var url = 'ws://39.108.179.2:8080/optionalDeepSocketServer'
 var ws = new WebSocket(url);
 ws.onopen = function()
@@ -63,14 +61,9 @@ ws.onmessage = function(evt)
 	
 	var percent = 0
 	
-	if (now != 0) {
-		percent = GetPercent(data.now - now, 100)
-	}
-	else {
-		percent = GetPercent(data.now - data.now, 100)
-	}
+	percent = GetPercent(data.now - data.close, 100)
+		
 	$('#percent td').eq(1).text(percent)
-	now = data.now
 	
 	$('#turnover td').eq(1).text(data.turnover)
 	$('#volume td').eq(1).text(data.volume)
