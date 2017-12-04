@@ -129,7 +129,7 @@ function addStockTr(tab) {
 				"<td>" + stock.close + "</td>" +
 				"<td>" + stock.low + "</td>" +
 				"<td>" + stock.high + "</td>" +
-				"<td>" + stock.now + "</td>" +
+				"<td class='" + stock.stockcode + '-now' + "'>" + stock.now + "</td>" +
 				"</tr>"
 		
 		addTr(tab, i, trHtml)

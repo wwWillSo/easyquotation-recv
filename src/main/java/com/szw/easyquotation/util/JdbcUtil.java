@@ -33,7 +33,7 @@ public class JdbcUtil {
 	}
 
 	/**
-	 * 整个list有可能除到最后还有余数，这时候的i是最后能被整除的i了 <p>TODO</p>
+	 * 整个list有可能除到最后还有余数，这时候的i是最后能被整除的i了
 	 * 
 	 * @param list
 	 * @param count
