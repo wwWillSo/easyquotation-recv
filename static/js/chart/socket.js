@@ -61,7 +61,11 @@ ws.onmessage = function(evt)
 	
 	var percent = 0
 	
-	percent = GetPercent(data.now - data.close, data.close)
+	if (data.open != 0) {
+		percent = GetPercent(data.now - data.close, data.close)
+	} else {
+		percent = "停牌中";
+	}
 		
 	$('#percent td').eq(1).text(percent)
 	
