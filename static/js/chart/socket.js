@@ -61,7 +61,7 @@ ws.onmessage = function(evt)
 	
 	var percent = 0
 	
-	percent = GetPercent(data.now - data.close, 100)
+	percent = GetPercent(data.now - data.close, data.close)
 		
 	$('#percent td').eq(1).text(percent)
 	
