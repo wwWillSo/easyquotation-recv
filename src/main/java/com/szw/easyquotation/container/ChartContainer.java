@@ -170,7 +170,7 @@ public class ChartContainer {
 
 			return list;
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		return null;
