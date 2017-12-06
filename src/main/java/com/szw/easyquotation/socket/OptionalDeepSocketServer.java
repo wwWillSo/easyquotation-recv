@@ -17,7 +17,6 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.net.SocketServer;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
@@ -30,7 +29,7 @@ import com.szw.easyquotation.config.SystemConfig;
 @Component
 public class OptionalDeepSocketServer {
 
-	private Logger logger = Logger.getLogger(SocketServer.class);
+	private Logger logger = Logger.getLogger(OptionalDeepSocketServer.class);
 
 	private static Map<String, Session> sessionMap = new ConcurrentHashMap<String, Session>();
 
@@ -54,7 +53,9 @@ public class OptionalDeepSocketServer {
 		if (StringUtils.isEmpty(topic)) {
 			topic = "init";
 		}
+
 		topicMap.put(session.getId(), topic);
+
 		logger.info("onMessage sessionId:" + session.getId() + " topic:" + topic);
 	}
 
@@ -65,11 +66,14 @@ public class OptionalDeepSocketServer {
 				Context context = ZMQ.context(1);
 				Socket subscriber = context.socket(ZMQ.SUB);
 				subscriber.connect(host);
+
 				subscriber.subscribe(topic.getBytes());
+
 				while (!Thread.currentThread().isInterrupted()) {
 					Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 					String data = subscriber.recvStr();
 					String topics = data.substring(0, data.lastIndexOf("{"));
+
 					String contents = data.substring(data.lastIndexOf("{"));
 					synchronized (OptionalDeepSocketServer.class) {
 						actionMethod(topics, contents);
@@ -86,7 +90,7 @@ public class OptionalDeepSocketServer {
 	public void onClose(Session session, CloseReason closeReason) {
 		logger.info("onClose sessionId:" + session.getId());
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-		synchronized (SocketServer.class) {
+		synchronized (OptionalDeepSocketServer.class) {
 			delMethod(session);
 		}
 	}
@@ -95,7 +99,7 @@ public class OptionalDeepSocketServer {
 	public void error(Session session, java.lang.Throwable throwable) {
 		logger.info("OnError sessionId:" + session.getId());
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-		synchronized (SocketServer.class) {
+		synchronized (OptionalDeepSocketServer.class) {
 			delMethod(session);
 		}
 	}
@@ -108,10 +112,12 @@ public class OptionalDeepSocketServer {
 		for (Map.Entry<String, Session> i : set) {
 			try {
 				if (topic.startsWith(topicMap.get(i.getValue().getId()))) {
-					i.getValue().getBasicRemote().sendText("{type:'" + "" + "',text:'" + content + "'}");
+					i.getValue().getBasicRemote().sendText("{type:'" + "',text:'" + content + "'}");
 				}
+			} catch (IllegalStateException e) {
+
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 

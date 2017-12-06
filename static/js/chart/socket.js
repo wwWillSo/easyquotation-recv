@@ -1,4 +1,7 @@
 ;
+
+var heartflag = false;
+
 function parseObj(strData) { 
 	return (new Function("return " + strData))();
 };
@@ -12,10 +15,25 @@ function GetPercent(num, total) {
 	return total <= 0 ? "0%" : (Math.round(num / total * 10000) / 100.00 + "%"); 
 } 
 
+function heart() {
+    if (heartflag){
+    	
+    	console.log('发送心跳')
+    	
+    	var stockcode = $('.stock-code').text()
+
+    	ws.send("marketdata:" + stockcode);
+    }
+    setTimeout("heart()", 10*60*1000);
+
+}
+
 var url = 'ws://39.108.179.2:8080/optionalDeepSocketServer'
 var ws = new WebSocket(url);
 ws.onopen = function()
-{  console.log("open");
+{  
+	heartflag = true;
+	console.log("open");
 
 	var stockcode = $('.stock-code').text()
 

@@ -123,7 +123,7 @@ function addStockTr(tab) {
 		var stock = stockList[i]
 		
 		var trHtml="<tr onclick='goto_chart("+ "\"" + stock.stockcode + "\"" +")'>" +
-				"<td>" + stock.stockcode + "</td>" +
+				"<td class='code'>" + stock.stockcode + "</td>" +
 				"<td>" + stock.name + "</td>" +
 				"<td>" + stock.open + "</td>" +
 				"<td>" + stock.close + "</td>" +
