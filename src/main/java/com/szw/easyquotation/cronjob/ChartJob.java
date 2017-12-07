@@ -14,6 +14,7 @@ import com.szw.easyquotation.processor.ChartContainerInitProcessor;
 import com.szw.easyquotation.processor.DailyKLineProcessor;
 import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
 import com.szw.easyquotation.util.DateUtil;
+import com.szw.easyquotation.util.HttpClientUtils;
 import com.szw.easyquotation.util.RedisCacheUtil;
 
 
@@ -28,6 +29,12 @@ public class ChartJob {
 
 	@Value("${marketdata.webservice.host}")
 	private String marketdataUrl;
+
+	@Value("${createNewTableJob.host}")
+	private String createNewTableJobUrl;
+
+	@Value("${createNewTableJob.interval}")
+	private String createNewTableJobInterval;
 
 	@Autowired
 	private EasyQuotationChartProcessor newEasyQuotationChartProcessor;
@@ -107,6 +114,17 @@ public class ChartJob {
 			return;
 		}
 		redisCacheUtil.setCacheMap("marketdata", ChartContainer.marketdataMap);
+	}
+
+	@Scheduled(cron = "${createNewTableJob}")
+	public void createNewTableJob() {
+
+		if (!env.getProperty("createNewTableJob.switch").equals("Y")) {
+			return;
+		}
+
+		System.out.println("分时数据转移到新表任务启动...");
+		HttpClientUtils.doGet(createNewTableJobUrl + createNewTableJobInterval);
 	}
 
 }
