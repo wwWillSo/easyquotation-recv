@@ -82,6 +82,12 @@ public class DateUtil {
 		return minute;
 	}
 
+	public static long countSeconds(Date end, Date start) {
+		long seconds = (end.getTime() - start.getTime()) / 1000;
+
+		return seconds;
+	}
+
 	public static void main(String args[]) throws Exception {
 
 		System.out.println(resetZeroSeconds(new Date()));
