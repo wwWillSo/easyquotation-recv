@@ -46,7 +46,7 @@ public class PublicService {
 			if (chartType == 1440)
 				date = DateUtil.format_yyyyMMdd(o.getCreateTime());
 			else
-				date = DateUtil.format_yyyyMMddHHmmss(o.getCreateTime());
+				date = DateUtil.format_yyyyMMddHHmm(o.getCreateTime());
 			BigDecimal open = o.getOpen();
 			BigDecimal close = o.getClose();
 			BigDecimal low = o.getLow();

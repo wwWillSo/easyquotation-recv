@@ -17,6 +17,14 @@ public class DateUtil {
 		return date1.before(date2);
 	}
 
+	public static Date addMinute(Date date, int minute) {
+		Calendar now = Calendar.getInstance();
+		now.setTime(date);
+		now.set(Calendar.MINUTE, now.get(Calendar.MINUTE) + minute);
+
+		return now.getTime();
+	}
+
 	public static Date getTime(int hour, int minute, int second) {
 		Calendar now = Calendar.getInstance();
 		now.setTime(new Date());
@@ -25,6 +33,12 @@ public class DateUtil {
 		now.set(Calendar.SECOND, second);
 
 		return now.getTime();
+	}
+
+	public static int getWeek(Date date) {
+		Calendar now = Calendar.getInstance();
+		now.setTime(date);
+		return now.get(Calendar.DAY_OF_WEEK);
 	}
 
 	public static int getHour(Date date) {
@@ -69,6 +83,14 @@ public class DateUtil {
 
 	}
 
+	public static String format_yyyyMMddHHmm(Date date) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		return sdf.format(date);
+
+	}
+
 	public static String format_yyyyMMdd(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -90,6 +112,6 @@ public class DateUtil {
 
 	public static void main(String args[]) throws Exception {
 
-		System.out.println(resetZeroSeconds(new Date()));
+		System.out.println(getWeek(new Date()));
 	}
 }

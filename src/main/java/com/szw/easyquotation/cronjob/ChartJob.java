@@ -1,7 +1,5 @@
 package com.szw.easyquotation.cronjob;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -10,10 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
-import com.szw.easyquotation.processor.ChartContainerInitProcessor;
 import com.szw.easyquotation.processor.DailyKLineProcessor;
-import com.szw.easyquotation.processor.EasyQuotationChartProcessor;
-import com.szw.easyquotation.util.DateUtil;
+import com.szw.easyquotation.processor.ZmqEasyQuotationChartProcessor;
 import com.szw.easyquotation.util.HttpClientUtils;
 import com.szw.easyquotation.util.RedisCacheUtil;
 
@@ -37,12 +33,6 @@ public class ChartJob {
 	private String createNewTableJobInterval;
 
 	@Autowired
-	private EasyQuotationChartProcessor newEasyQuotationChartProcessor;
-
-	@Autowired
-	private ChartContainerInitProcessor chartContainerInitProcessor;
-
-	@Autowired
 	private DailyKLineProcessor dailyKLineProcessor;
 
 	@Autowired
@@ -51,56 +41,37 @@ public class ChartJob {
 	@Autowired
 	private Environment env;
 
+	@Autowired
+	private ZmqEasyQuotationChartProcessor zmqEasyQuotationChartProcessor;
+
 	@Scheduled(cron = "${openMarketMorning}")
 	public void openMarketMorning() {
-
-		if (!env.getProperty("chart.job.switch").equals("Y")) {
-			return;
-		}
-
-		if (DateUtil.isBefore(new Date(), DateUtil.getTime(9, 30, 0))) {
-			return;
-		}
-
-		if (DateUtil.isAfter(new Date(), DateUtil.getTime(11, 30, 0))) {
-			return;
-		}
-
-		if (ChartContainer.hasbeenInit) {
-			System.out.println("早上定时任务启动...");
-			newEasyQuotationChartProcessor.execute();
-		} else {
-			System.out.println("chartContainer初始化任务未完成...");
-			chartContainerInitProcessor.execute();
-		}
-
+		System.out.println("早上开市...");
+		zmqEasyQuotationChartProcessor.execute();
 	}
 
 	@Scheduled(cron = "${openMarketAfternoon}")
 	public void openMarketAfternoon() {
+		System.out.println("下午开市...");
+		zmqEasyQuotationChartProcessor.execute();
+	}
 
-		if (!env.getProperty("chart.job.switch").equals("Y")) {
-			return;
-		}
+	@Scheduled(cron = "${closeMarketMorning}")
+	public void closeMarketMorning() {
+		System.out.println("早上收市...");
+		zmqEasyQuotationChartProcessor.shutdown();
+	}
 
-		if (DateUtil.isAfter(new Date(), DateUtil.getTime(15, 0, 0))) {
-			return;
-		}
-
-		if (ChartContainer.hasbeenInit) {
-			System.out.println("下午定时任务启动...");
-			newEasyQuotationChartProcessor.execute();
-		} else {
-			System.out.println("chartContainer初始化任务未完成...");
-			chartContainerInitProcessor.execute();
-		}
-
+	@Scheduled(cron = "${closeMarketAfternoon}")
+	public void closeMarketAfternoon() {
+		System.out.println("下午收市...");
+		zmqEasyQuotationChartProcessor.shutdown();
 	}
 
 	@Scheduled(cron = "${genDailyKLine}")
 	public void genDailyKLine() {
 
-		if (!env.getProperty("kLine.job.switch").equals("Y")) {
+		if (!env.getProperty("dailyKLine.job.switch").equals("Y")) {
 			return;
 		}
 
