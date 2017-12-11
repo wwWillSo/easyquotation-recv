@@ -49,7 +49,7 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 
 				JSONObject obj = JSONObject.parseObject(message);
 				RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
-				marketdata.setUpdateTime(new Date());
+				marketdata.setUpdateTime(marketdata.getDate());
 
 				// if (marketdata.getStockcode().equals("000001")) {
 				// System.out.println(" [线程" + Thread.currentThread().getId() + "]" + message);
