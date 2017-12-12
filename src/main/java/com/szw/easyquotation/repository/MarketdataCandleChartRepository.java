@@ -17,5 +17,4 @@ public interface MarketdataCandleChartRepository extends JpaRepository<MarketDat
 	public List<MarketDataCandleChart> findByStockcodeAndChartType(String stockcode, int chartType);
 
 	public MarketDataCandleChart findByStockcodeAndChartTypeAndCreateTime(String stockcode, int chartType, Date createTime);
-
 }

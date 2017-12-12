@@ -1,5 +1,6 @@
 package com.szw.easyquotation.runnable;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -101,6 +102,10 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 						// 成交额
 						chart.setVolume(marketdata.getVolume());
 
+						// 此分钟累计成交量
+						chart.setRealTimeTurnover(BigDecimal.ZERO);
+						chart.setRealTimeVolume(BigDecimal.ZERO);
+
 						ChartContainer.timeMap.get(min).put(marketdata.getStockcode(), chart);
 
 						// if (marketdata.getStockcode().equals("000001") && min == "1") {
@@ -120,6 +125,10 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 						chart.setClose(marketdata.getNow());
 						chart.setNow(marketdata.getNow());
 						chart.setUpdateTime(marketdata.getDate());
+
+						// 此分钟累计成交量
+						chart.setRealTimeTurnover(marketdata.getTurnover().subtract(chart.getTurnover()));
+						chart.setRealTimeVolume(marketdata.getVolume().subtract(chart.getVolume()));
 
 						ChartContainer.timeMap.get(min).put(marketdata.getStockcode(), chart);
 
@@ -142,7 +151,7 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 								chart.setUpdateTime(chart.getCreateTime());
 							}
 
-							// marketdataCandleChartRepository.save(chart);
+							marketdataCandleChartRepository.save(chart);
 							// System.out.println(chart.getStockcode() + "-" + chart.getChartType()
 							// + "持久化完成...");
 

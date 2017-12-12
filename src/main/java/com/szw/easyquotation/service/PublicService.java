@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.szw.easyquotation.bean.AllMarketDataJsonResp;
 import com.szw.easyquotation.bean.PageRequest;
+import com.szw.easyquotation.container.ChartContainer;
 import com.szw.easyquotation.entity.MarketDataCandleChart;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
@@ -40,6 +41,8 @@ public class PublicService {
 
 		List<MarketDataCandleChart> list = marketdataCandleChartRepository.findByStockcodeAndChartType(stockcode, chartType);
 
+		Map<String, Map<String, MarketDataCandleChart>> timeMap = ChartContainer.timeMap;
+
 		for (MarketDataCandleChart o : list) {
 			Object[] chart = new Object[6];
 			String date = "";
@@ -52,6 +55,32 @@ public class PublicService {
 			BigDecimal low = o.getLow();
 			BigDecimal high = o.getHigh();
 			BigDecimal vol = o.getVolume();
+
+			chart[0] = date;
+			chart[1] = open;
+			chart[2] = close;
+			chart[3] = low;
+			chart[4] = high;
+			chart[5] = vol;
+			charts.add(chart);
+		}
+
+		if (chartType != 1 && null != timeMap && null != timeMap.get(chartType + "") && null != timeMap.get(chartType + "").get(stockcode)) {
+			MarketDataCandleChart o = timeMap.get(chartType + "").get(stockcode);
+
+			Object[] chart = new Object[6];
+
+			String date = "";
+			if (chartType == 1440)
+				date = DateUtil.format_yyyyMMdd(o.getCreateTime());
+			else
+				date = DateUtil.format_yyyyMMddHHmm(DateUtil.addMinute(o.getCreateTime(), chartType));
+
+			BigDecimal open = o.getOpen();
+			BigDecimal close = o.getClose();
+			BigDecimal low = o.getLow();
+			BigDecimal high = o.getHigh();
+			BigDecimal vol = o.getRealTimeVolume();
 
 			chart[0] = date;
 			chart[1] = open;

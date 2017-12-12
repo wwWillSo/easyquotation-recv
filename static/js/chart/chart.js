@@ -1,9 +1,24 @@
 ;
 $(document).ready(function(){
 		
-	var stockcode = GetQueryString(stockcode)
+	var stockcode = GetQueryString()
 	
+	$('.chart-type').text('日k')
+
 	genKLineChart(stockcode, 1440)
+	
+	$('.kLine-type').click(function (e) {
+		e.preventDefault()
+		
+		//重置选中样式
+		$('.active').removeClass('active')
+		$(this).parent().addClass('active')
+		
+		$('.chart-type').text($(this).text() + 'k')
+		
+		var chartType = $(this).data('flag')
+		genKLineChart(stockcode, chartType)
+	})
 })
 
 /**
@@ -42,7 +57,6 @@ function genKLineChart(stockcode, chartType) {
 		success:function (result) {
 			$('.stock-code').text(result.stockcode)
 			$('.stock-name').text(result.name)
-			$('.chart-type').text('日k')
 		},
 		error:function(e) {
 			console.log(e)

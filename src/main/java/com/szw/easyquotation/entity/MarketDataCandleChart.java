@@ -58,6 +58,10 @@ public class MarketDataCandleChart implements Serializable {
 
 	private BigDecimal volume;		// 成交量
 
+	private BigDecimal realTimeTurnover;
+
+	private BigDecimal realTimeVolume;
+
 	public MarketDataCandleChart() {
 	}
 
@@ -163,6 +167,22 @@ public class MarketDataCandleChart implements Serializable {
 
 	public void setVolume(BigDecimal volume) {
 		this.volume = volume;
+	}
+
+	public BigDecimal getRealTimeTurnover() {
+		return realTimeTurnover;
+	}
+
+	public void setRealTimeTurnover(BigDecimal realTimeTurnover) {
+		this.realTimeTurnover = realTimeTurnover;
+	}
+
+	public BigDecimal getRealTimeVolume() {
+		return realTimeVolume;
+	}
+
+	public void setRealTimeVolume(BigDecimal realTimeVolume) {
+		this.realTimeVolume = realTimeVolume;
 	}
 
 }
