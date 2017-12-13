@@ -180,7 +180,7 @@ function genChart(url) {
 	            {
 	                type: 'inside',
 	                xAxisIndex: [0, 1],
-	                start: 98,
+	                start: 0,
 	                end: 100
 	            },
 	            {
@@ -188,7 +188,7 @@ function genChart(url) {
 	                xAxisIndex: [0, 1],
 	                type: 'slider',
 	                top: '85%',
-	                start: 98,
+	                start: 0,
 	                end: 100
 	            }
 	        ],

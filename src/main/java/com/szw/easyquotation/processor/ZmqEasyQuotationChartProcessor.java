@@ -1,5 +1,6 @@
 package com.szw.easyquotation.processor;
 
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.szw.easyquotation.entity.RealTimeMarketdata;
 import com.szw.easyquotation.repository.MarketdataCandleChartRepository;
 import com.szw.easyquotation.runnable.ZmqEasyQuotationChartRunnable;
+import com.szw.easyquotation.util.DateUtil;
 import com.szw.easyquotation.util.RedisCacheUtil;
 
 
@@ -44,8 +46,8 @@ public class ZmqEasyQuotationChartProcessor {
 	}
 
 	public boolean shutdown() {
-		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()...");
-		threadPool.shutdown();
+		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		threadPool.shutdownNow();
 		try {
 			threadPool.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
@@ -55,6 +57,7 @@ public class ZmqEasyQuotationChartProcessor {
 			threadPool.isTerminated();
 		}
 
+		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()完成..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		return threadPool.isShutdown();
 	}
 

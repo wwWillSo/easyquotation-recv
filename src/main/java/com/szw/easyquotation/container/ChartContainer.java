@@ -68,4 +68,13 @@ public class ChartContainer {
 		return list.size();
 	}
 
+	public static boolean clearTimeMap() {
+		for (String min : chartTypeArr) {
+			ChartContainer.timeMap.remove(min) ;
+		}
+		if (ChartContainer.timeMap.size() == 0) {
+			return true ;
+		}
+		return false ;
+	}
 }
