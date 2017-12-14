@@ -77,7 +77,7 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 					if (null == ChartContainer.timeMap.get(min).get(marketdata.getStockcode())) {
 
 						// 不存在此code的对象就是有可能是刚重启程序了，这时候要等到推送的行情有00秒的时候再累计
-						if (DateUtil.getSecond(marketdata.getDate()) == 0) {
+						if (DateUtil.getSecond(marketdata.getDate()) <= 6) {
 							isReady = true;
 						}
 
@@ -158,6 +158,11 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 							ChartContainer.timeMap.get(min).remove(marketdata.getStockcode());
 						}
 					}
+				}
+
+				// 增加日志
+				if (!isReady) {
+					System.out.println(marketdata.getStockcode() + " is not ready, marketdata.date：" + marketdata.getDate());
 				}
 			}
 		} catch (Exception e) {

@@ -14,7 +14,6 @@ public class DailyKLineBean {
 	private BigDecimal close;
 	private BigDecimal low;
 	private BigDecimal volume;
-	private BigDecimal turnover;
 
 	public Date getDate() {
 		return date;
@@ -63,13 +62,4 @@ public class DailyKLineBean {
 	public void setVolume(BigDecimal volume) {
 		this.volume = volume;
 	}
-
-	public BigDecimal getTurnover() {
-		return turnover;
-	}
-
-	public void setTurnover(BigDecimal turnover) {
-		this.turnover = turnover;
-	}
-
 }

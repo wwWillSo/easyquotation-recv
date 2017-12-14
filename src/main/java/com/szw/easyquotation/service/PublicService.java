@@ -54,7 +54,7 @@ public class PublicService {
 			BigDecimal close = o.getClose();
 			BigDecimal low = o.getLow();
 			BigDecimal high = o.getHigh();
-			BigDecimal vol = o.getVolume();
+			BigDecimal vol = o.getTurnover();
 
 			chart[0] = date;
 			chart[1] = open;

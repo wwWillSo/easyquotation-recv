@@ -38,10 +38,10 @@ public class DailyKLineRunnable implements Callable<DailyKLineRunnable> {
 				String stockCode = stock.getStockcode();
 
 				List<DailyKLineBean> kLineBeanList = ChartContainer.getDailyKLine(kLineUrl, stockCode);
-				
+
 				if (null == kLineBeanList || kLineBeanList.isEmpty()) {
 					System.out.println(stockCode + "的日k数据为空");
-					continue ;
+					continue;
 				}
 
 				List<MarketDataCandleChart> list = new ArrayList<MarketDataCandleChart>();
@@ -55,6 +55,8 @@ public class DailyKLineRunnable implements Callable<DailyKLineRunnable> {
 						chart.setStockcode(stockCode);
 						chart.setCreateTime(DateUtil.resetZeroSeconds(bean.getDate()));
 						chart.setUpdateTime(chart.getCreateTime());
+						chart.setTurnover(chart.getVolume());
+						chart.setVolume(BigDecimal.ZERO);
 						if (null == chart.getVolume())
 							chart.setVolume(BigDecimal.ZERO);
 						if (null == chart.getTurnover())
@@ -63,7 +65,7 @@ public class DailyKLineRunnable implements Callable<DailyKLineRunnable> {
 					}
 				}
 				ChartContainer.persisChartList(list);
-//				System.out.println(stockCode + "日k数据持久化完毕，总共" + list.size() + "条");
+				// System.out.println(stockCode + "日k数据持久化完毕，总共" + list.size() + "条");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

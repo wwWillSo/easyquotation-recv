@@ -54,9 +54,9 @@ public class MarketDataCandleChart implements Serializable {
 
 	private String stockcode;		// 股票代码
 
-	private BigDecimal turnover;	// 成交额
+	private BigDecimal turnover;	// 成交量
 
-	private BigDecimal volume;		// 成交量
+	private BigDecimal volume;		// 成交额
 
 	private BigDecimal realTimeTurnover;
 
