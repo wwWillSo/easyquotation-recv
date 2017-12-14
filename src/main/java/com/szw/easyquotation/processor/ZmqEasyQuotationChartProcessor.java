@@ -47,7 +47,8 @@ public class ZmqEasyQuotationChartProcessor {
 
 	public boolean shutdown() {
 		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-		threadPool.shutdownNow();
+		// threadPool.shutdownNow();
+		threadPool.shutdown();
 		try {
 			threadPool.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
