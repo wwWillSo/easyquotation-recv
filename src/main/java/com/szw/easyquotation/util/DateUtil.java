@@ -112,6 +112,6 @@ public class DateUtil {
 
 	public static void main(String args[]) throws Exception {
 
-		System.out.println(getWeek(new Date()));
+		System.out.println(getSecond(new Date()));
 	}
 }
