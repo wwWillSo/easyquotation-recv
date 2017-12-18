@@ -1,7 +1,6 @@
 package com.szw.easyquotation.runnable;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -29,14 +28,6 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 	private MarketdataCandleChartRepository marketdataCandleChartRepository;
 
-	private Date morningStart = DateUtil.getTime(9, 30, 0);
-
-	private Date morningEnd = DateUtil.getTime(11, 30, 0);
-
-	private Date afternoonStart = DateUtil.getTime(13, 0, 0);
-
-	private Date afternoonEnd = DateUtil.getTime(15, 0, 0);
-
 	public ZmqEasyQuotationChartRunnable(MarketdataCandleChartRepository marketdataCandleChartRepository, RedisCacheUtil redisCacheUtil, String zmqUrl,
 			String title) {
 		this.marketdataCandleChartRepository = marketdataCandleChartRepository;
@@ -55,7 +46,7 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 		try {
 
-			System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
+			System.out.println(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
 
 			while (true) {
 
@@ -69,13 +60,6 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 				RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
 				marketdata.setUpdateTime(marketdata.getDate());
 
-				Date now = new Date();
-				// 先想办法禁止不该进来的行情数据影响到统计
-				if (DateUtil.isBefore(now, morningStart) || DateUtil.isAfter(now, afternoonEnd)
-						|| (DateUtil.isAfter(now, morningEnd) && DateUtil.isBefore(now, afternoonStart))) {
-					continue;
-				}
-
 				// k线图与分时图逻辑
 				for (String min : ChartContainer.chartTypeArr) {
 					// map不存在此分钟的集合，新建一个
@@ -85,12 +69,6 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 					}
 					// 该分钟集合不存在此code的对象，新建一个
 					if (null == ChartContainer.timeMap.get(min).get(marketdata.getStockcode())) {
-
-						// 不存在此code的对象就是有可能是刚重启程序了，这时候要等到推送的行情有00秒的时候再累计
-						if (DateUtil.getSecond(marketdata.getDate()) > 6) {
-							System.out.println(marketdata.getStockcode() + "-" + min + "等到推送的行情有00秒的时候再累计");
-							continue;
-						}
 
 						MarketDataCandleChart chart = new MarketDataCandleChart();
 						chart.setChartType(Integer.parseInt(min));

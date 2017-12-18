@@ -112,6 +112,7 @@ public class DateUtil {
 
 	public static void main(String args[]) throws Exception {
 
-		System.out.println(getSecond(new Date()));
+		Date date = DateUtil.getTime(14, 19, 35);
+		System.out.println(getSecond(date));
 	}
 }

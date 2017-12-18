@@ -1,6 +1,5 @@
 package com.szw.easyquotation.runnable;
 
-import java.util.Date;
 import java.util.concurrent.Callable;
 
 import org.zeromq.ZMQ;
@@ -37,7 +36,7 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 
 		try {
 
-			System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
+			System.out.println(" [实时行情线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
 
 			while (true) {
 
