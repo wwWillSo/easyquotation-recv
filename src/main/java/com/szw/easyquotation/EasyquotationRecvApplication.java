@@ -39,8 +39,6 @@ public class EasyquotationRecvApplication {
 			zmqEasyQuotationRecvProcessor.execute();
 		}
 
-		Date now = new Date();
-
 		String[] openMarketMorning = env.getProperty("openMarketMorning").split(" ");
 
 		String[] closeMarketMorning = env.getProperty("closeMarketMorning").split(" ");
@@ -52,7 +50,17 @@ public class EasyquotationRecvApplication {
 		Context context = ZMQ.context(1);
 		Socket subscriber = context.socket(ZMQ.SUB);
 		subscriber.connect(env.getProperty("marketdata.zeromq.host"));
-		subscriber.subscribe("marketdata:");
+		subscriber.subscribe("marketdata:000001");
+
+		String marketdata_now = subscriber.recvStr();
+		String tempMessage = marketdata_now.substring(marketdata_now.lastIndexOf("{"));
+
+		JSONObject tempObj = JSONObject.parseObject(tempMessage);
+		RealTimeMarketdata tempMarketdata = tempObj.toJavaObject(RealTimeMarketdata.class);
+
+		Date now = tempMarketdata.getDate();
+
+		System.out.println("当前行情时间：" + now);
 
 		// 检查是否在开市时间内
 		if (DateUtil.getWeek(now) >= 2 && DateUtil.getWeek(now) <= 6) {
@@ -62,7 +70,7 @@ public class EasyquotationRecvApplication {
 							Integer.valueOf(closeMarketMorning[0])))) {
 
 				new Thread(() -> {
-					System.out.println("程序启动时间为" + DateUtil.format_yyyyMMddHHmmss(now) + ", 准备早上开市...");
+					System.out.println("程序重启，当前行情时间为" + DateUtil.format_yyyyMMddHHmmss(now) + ", 准备早上开市...");
 					while (true) {
 
 						String msg = subscriber.recvStr();
@@ -75,7 +83,7 @@ public class EasyquotationRecvApplication {
 						RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
 
 						if (DateUtil.getSecond(marketdata.getDate()) < 10) {
-							System.out.println("早上开市线程启动..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+							System.out.println("早上开市线程启动..." + DateUtil.format_yyyyMMddHHmmss(marketdata.getDate()));
 							zmqEasyQuotationChartProcessor.execute();
 							break;
 						}
@@ -87,7 +95,7 @@ public class EasyquotationRecvApplication {
 							Integer.valueOf(closeMarketAfternoon[0])))) {
 
 				new Thread(() -> {
-					System.out.println("程序启动时间为" + DateUtil.format_yyyyMMddHHmmss(now) + ", 准备下午开市...");
+					System.out.println("程序重启，当前行情时间为" + DateUtil.format_yyyyMMddHHmmss(now) + ", 准备下午开市...");
 					while (true) {
 
 						String msg = subscriber.recvStr();
@@ -100,7 +108,7 @@ public class EasyquotationRecvApplication {
 						RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
 
 						if (DateUtil.getSecond(marketdata.getDate()) < 10) {
-							System.out.println("下午开市线程启动..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+							System.out.println("下午开市线程启动..." + DateUtil.format_yyyyMMddHHmmss(marketdata.getDate()));
 							zmqEasyQuotationChartProcessor.execute();
 							break;
 						}

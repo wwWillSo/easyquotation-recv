@@ -34,7 +34,7 @@ public class ZmqEasyQuotationRecvProcessor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			threadPool.shutdown();
+			// threadPool.shutdown();
 		}
 	}
 }

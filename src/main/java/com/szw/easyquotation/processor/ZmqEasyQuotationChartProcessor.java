@@ -36,19 +36,20 @@ public class ZmqEasyQuotationChartProcessor {
 
 		try {
 			threadPool = Executors.newSingleThreadExecutor();
+			System.out.println("创建商户池：" + threadPool);
 			threadPool.submit(new ZmqEasyQuotationChartRunnable(marketdataCandleChartRepository, redisCacheUtil, zmqUrl, title));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			threadPool.shutdown();
+			// threadPool.shutdown();
 		}
 	}
 
 	public boolean shutdown() {
 		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-		// threadPool.shutdownNow();
-		threadPool.shutdown();
+		threadPool.shutdownNow();
+		// threadPool.shutdown();
 		try {
 			threadPool.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {

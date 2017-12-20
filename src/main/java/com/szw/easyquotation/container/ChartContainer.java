@@ -20,7 +20,7 @@ public class ChartContainer {
 
 	public final static String[] chartTypeArr = { "1", "3", "5", "10", "30", "60" };
 
-	public final static ConcurrentMap<String, Map<String, MarketDataCandleChart>> timeMap = new ConcurrentHashMap<String, Map<String, MarketDataCandleChart>>();
+	public static ConcurrentMap<String, Map<String, MarketDataCandleChart>> timeMap = new ConcurrentHashMap<String, Map<String, MarketDataCandleChart>>();
 
 	public final static ConcurrentMap<String, RealTimeMarketdata> marketdataMap = new ConcurrentHashMap<String, RealTimeMarketdata>();
 
@@ -69,12 +69,7 @@ public class ChartContainer {
 	}
 
 	public static boolean clearTimeMap() {
-		for (String min : chartTypeArr) {
-			ChartContainer.timeMap.remove(min) ;
-		}
-		if (ChartContainer.timeMap.size() == 0) {
-			return true ;
-		}
-		return false ;
+		timeMap = new ConcurrentHashMap<String, Map<String, MarketDataCandleChart>>();
+		return true;
 	}
 }
