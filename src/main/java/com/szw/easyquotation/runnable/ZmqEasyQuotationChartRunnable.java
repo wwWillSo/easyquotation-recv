@@ -48,6 +48,8 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 			System.out.println(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
 
+			System.out.println(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 第一条数据：" + subscriber.recvStr());
+
 			while (true) {
 
 				String msg = subscriber.recvStr();
