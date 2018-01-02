@@ -1,5 +1,6 @@
 package com.szw.easyquotation.util;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -10,14 +11,15 @@ import org.springframework.stereotype.Component;
 public class SpringUtil implements ApplicationContextAware {
 	private static ApplicationContext applicationContext;
 
+	private final Logger log = Logger.getLogger(SpringUtil.class);
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		if (SpringUtil.applicationContext == null) {
 			SpringUtil.applicationContext = applicationContext;
 		}
 
-		System.out.println("ApplicationContext配置成功,applicationContext="
-				+ SpringUtil.applicationContext);
+		log.info("ApplicationContext配置成功,applicationContext=" + SpringUtil.applicationContext);
 
 	}
 

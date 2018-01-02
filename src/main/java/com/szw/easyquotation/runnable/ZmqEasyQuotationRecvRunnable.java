@@ -2,6 +2,7 @@ package com.szw.easyquotation.runnable;
 
 import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ.Socket;
@@ -20,6 +21,8 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 
 	private String title;
 
+	private final Logger log = Logger.getLogger(ZmqEasyQuotationRecvRunnable.class);
+
 	public ZmqEasyQuotationRecvRunnable(RedisCacheUtil redisCacheUtil, String zmqUrl, String title) {
 		this.redisCacheUtil = redisCacheUtil;
 		this.zmqUrl = zmqUrl;
@@ -36,7 +39,7 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 
 		try {
 
-			System.out.println(" [实时行情线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
+			log.info(" [实时行情线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
 
 			while (true) {
 
@@ -51,7 +54,7 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 				marketdata.setUpdateTime(marketdata.getDate());
 
 				// if (marketdata.getStockcode().equals("000001")) {
-				// System.out.println(" [线程" + Thread.currentThread().getId() + "]" + message);
+				// log.info(" [线程" + Thread.currentThread().getId() + "]" + message);
 				// }
 
 				redisCacheUtil.setCacheObject(marketdata.getStockcode(), marketdata);
@@ -59,7 +62,7 @@ public class ZmqEasyQuotationRecvRunnable implements Callable<ZmqEasyQuotationRe
 				ChartContainer.marketdataMap.put(marketdata.getStockcode(), marketdata);
 			}
 		} catch (Exception e) {
-			System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");
+			log.info(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");
 			e.printStackTrace();
 		} finally {
 			subscriber.close();

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ.Socket;
@@ -28,6 +29,8 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 	private MarketdataCandleChartRepository marketdataCandleChartRepository;
 
+	private final Logger log = Logger.getLogger(ZmqEasyQuotationChartRunnable.class);
+
 	public ZmqEasyQuotationChartRunnable(MarketdataCandleChartRepository marketdataCandleChartRepository, RedisCacheUtil redisCacheUtil, String zmqUrl,
 			String title) {
 		this.marketdataCandleChartRepository = marketdataCandleChartRepository;
@@ -46,9 +49,9 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 		try {
 
-			System.out.println(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
+			log.info(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
 
-			System.out.println(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 第一条数据：" + subscriber.recvStr());
+			log.info(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 第一条数据：" + subscriber.recvStr());
 
 			while (true) {
 
@@ -68,6 +71,10 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 					if (null == ChartContainer.timeMap.get(min)) {
 						Map<String, MarketDataCandleChart> chartMap = new HashMap<String, MarketDataCandleChart>();
 						ChartContainer.timeMap.put(min, chartMap);
+
+						if (marketdata.getStockcode().equals("000001")) {
+							log.info("timeMap-" + min + "初始化完成");
+						}
 					}
 					// 该分钟集合不存在此code的对象，新建一个
 					if (null == ChartContainer.timeMap.get(min).get(marketdata.getStockcode())) {
@@ -95,9 +102,9 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 						ChartContainer.timeMap.get(min).put(marketdata.getStockcode(), chart);
 
-						// if (marketdata.getStockcode().equals("000001") && min == "1") {
-						// System.out.println("turnover:" + chart.getTurnover());
-						// }
+						if (marketdata.getStockcode().equals("000001")) {
+							log.info("codeMap-" + min + "初始化完成");
+						}
 
 					} else {
 						// 该分钟集合存在此code的对象，进行计算
@@ -141,7 +148,7 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 							marketdataCandleChartRepository.save(chart);
 
 							if (chart.getStockcode().endsWith("000001"))
-								System.out.println(
+								log.info(
 										chart.getStockcode() + "-" + chart.getChartType() + "持久化完成..." + DateUtil.format_yyyyMMddHHmmss(chart.getCreateTime()));
 
 							ChartContainer.timeMap.get(min).remove(marketdata.getStockcode());
@@ -150,7 +157,7 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");
+			log.info(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");
 			e.printStackTrace();
 		} finally {
 			subscriber.close();

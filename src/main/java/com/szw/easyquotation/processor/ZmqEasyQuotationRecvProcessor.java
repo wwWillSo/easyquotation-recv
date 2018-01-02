@@ -3,6 +3,7 @@ package com.szw.easyquotation.processor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class ZmqEasyQuotationRecvProcessor {
 	private String zmqUrl;
 
 	private String title = "marketdata";
+
+	private final Logger log = Logger.getLogger(ZmqEasyQuotationRecvProcessor.class);
 
 	public void execute() {
 

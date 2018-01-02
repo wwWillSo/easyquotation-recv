@@ -2,6 +2,7 @@ package com.szw.easyquotation.cronjob;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -47,33 +48,35 @@ public class ChartJob {
 	@Autowired
 	private ZmqEasyQuotationChartProcessor zmqEasyQuotationChartProcessor;
 
+	private final Logger log = Logger.getLogger(ChartJob.class);
+
 	@Scheduled(cron = "${openMarketMorning}")
 	public void openMarketMorning() {
-		System.out.println("早上开市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("早上开市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		zmqEasyQuotationChartProcessor.execute();
 	}
 
 	@Scheduled(cron = "${openMarketAfternoon}")
 	public void openMarketAfternoon() {
-		System.out.println("下午开市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("下午开市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		zmqEasyQuotationChartProcessor.execute();
 	}
 
 	@Scheduled(cron = "${closeMarketMorning}")
 	public void closeMarketMorning() {
-		System.out.println("早上收市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("早上收市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		zmqEasyQuotationChartProcessor.shutdown();
 		if (ChartContainer.clearTimeMap()) {
-			System.out.println("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+			log.info("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		}
 	}
 
 	@Scheduled(cron = "${closeMarketAfternoon}")
 	public void closeMarketAfternoon() {
-		System.out.println("下午收市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("下午收市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		zmqEasyQuotationChartProcessor.shutdown();
 		if (ChartContainer.clearTimeMap()) {
-			System.out.println("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+			log.info("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		}
 	}
 
@@ -84,7 +87,7 @@ public class ChartJob {
 			return;
 		}
 
-		System.out.println("日K生成任务启动..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("日K生成任务启动..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		dailyKLineProcessor.execute();
 	}
 
@@ -103,7 +106,7 @@ public class ChartJob {
 			return;
 		}
 
-		System.out.println("分时数据转移到新表任务启动..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("分时数据转移到新表任务启动..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		HttpClientUtils.doGet(createNewTableJobUrl + createNewTableJobInterval);
 	}
 

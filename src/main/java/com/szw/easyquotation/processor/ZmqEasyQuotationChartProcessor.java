@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,11 +33,13 @@ public class ZmqEasyQuotationChartProcessor {
 	@Autowired
 	private MarketdataCandleChartRepository marketdataCandleChartRepository;
 
+	private final Logger log = Logger.getLogger(ZmqEasyQuotationChartProcessor.class);
+
 	public void execute() {
 
 		try {
 			threadPool = Executors.newSingleThreadExecutor();
-			System.out.println("创建商户池：" + threadPool);
+			log.info("创建商户池：" + threadPool);
 			threadPool.submit(new ZmqEasyQuotationChartRunnable(marketdataCandleChartRepository, redisCacheUtil, zmqUrl, title));
 
 		} catch (Exception e) {
@@ -47,7 +50,7 @@ public class ZmqEasyQuotationChartProcessor {
 	}
 
 	public boolean shutdown() {
-		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("调用ZmqEasyQuotationChartProcessor.shutdown()开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		threadPool.shutdownNow();
 		// threadPool.shutdown();
 		try {
@@ -59,7 +62,7 @@ public class ZmqEasyQuotationChartProcessor {
 			threadPool.isTerminated();
 		}
 
-		System.out.println("调用ZmqEasyQuotationChartProcessor.shutdown()完成..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		log.info("调用ZmqEasyQuotationChartProcessor.shutdown()完成..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		return threadPool.isShutdown();
 	}
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class PublicService {
 
 	@Value("${marketdata.webservice.host}")
 	private String marketdataUrl;
+
+	private final Logger log = Logger.getLogger(PublicService.class);
 
 	public List<MarketDataCandleChart> retrieveMarketDataCandleChart(String stockcode, int chartType) {
 		return marketdataCandleChartRepository.findByStockcodeAndChartType(stockcode, chartType);

@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,10 +35,12 @@ public class DailyKLineProcessor {
 	@Value("${marketdata.kLine.host}")
 	private String kLineUrl;
 
+	private final Logger log = Logger.getLogger(DailyKLineProcessor.class);
+
 	public boolean execute() {
 
 		try {
-			System.out.println("dailyKLine任务开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+			log.info("dailyKLine任务开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 
 			threadPool = Executors.newFixedThreadPool(poolSize);
 
@@ -52,7 +55,7 @@ public class DailyKLineProcessor {
 			}
 			threadPool.shutdown();
 			threadPool.awaitTermination(1, TimeUnit.DAYS);
-			System.out.println("dailyKLine任务结束..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+			log.info("dailyKLine任务结束..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
