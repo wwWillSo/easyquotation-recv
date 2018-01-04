@@ -85,7 +85,7 @@ public class MarketdataController {
 	@ResponseBody
 	public String test(String password) {
 
-		if (password.equals(userPass.equals(password)))
+		if (password.equals(userPass))
 			return "FALSE";
 
 		dailyKLineProcessor.execute();

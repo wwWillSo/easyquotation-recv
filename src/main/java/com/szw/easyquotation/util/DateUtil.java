@@ -5,6 +5,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+/**
+ * 日期操作工具类
+ * 
+ * @author 苏镇威 2018年1月8日 下午2:20:16
+ */
 public class DateUtil {
 
 	public final static long MINUTE = 60 * 1000;

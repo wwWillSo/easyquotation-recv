@@ -17,7 +17,7 @@ public class SystemConfig {
 
 	@PostConstruct
 	public void init() {
-		this.ZMQ_HOST = env.getProperty("marketdata.zeromq.host");
+		ZMQ_HOST = env.getProperty("marketdata.zeromq.host");
 	}
 
 }
