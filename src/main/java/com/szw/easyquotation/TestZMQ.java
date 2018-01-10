@@ -13,16 +13,20 @@ public class TestZMQ {
 		Context context = ZMQ.context(1);
 		Socket subscriber = context.socket(ZMQ.SUB);
 		subscriber.connect("tcp://localhost:5561");
-		subscriber.subscribe("marketdata:000001".getBytes());
+		// subscriber.subscribe("marketdata:000001".getBytes());
 
+		String str = "000001";
 		while (true) {
+			subscriber.subscribe(("marketdata:" + str).getBytes());
 			String msg = subscriber.recvStr();
 			String message = msg.substring(msg.lastIndexOf("{"));
-			
+
 			JSONObject obj = JSONObject.parseObject(message);
 			RealTimeMarketdata marketdata = obj.toJavaObject(RealTimeMarketdata.class);
-			
-			System.out.println(marketdata.getDate());
+
+			System.out.println(marketdata.getStockcode());
+
+			str = "000002";
 		}
 	}
 }
