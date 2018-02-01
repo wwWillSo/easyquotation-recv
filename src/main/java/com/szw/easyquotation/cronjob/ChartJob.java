@@ -66,18 +66,12 @@ public class ChartJob {
 	public void closeMarketMorning() {
 		log.info("早上收市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		zmqEasyQuotationChartProcessor.shutdown();
-		if (ChartContainer.clearTimeMap()) {
-			log.info("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-		}
 	}
 
 	@Scheduled(cron = "${closeMarketAfternoon}")
 	public void closeMarketAfternoon() {
 		log.info("下午收市..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
 		zmqEasyQuotationChartProcessor.shutdown();
-		if (ChartContainer.clearTimeMap()) {
-			log.info("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-		}
 	}
 
 	@Scheduled(cron = "${genDailyKLine}")

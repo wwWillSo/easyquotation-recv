@@ -1,6 +1,7 @@
 package com.szw.easyquotation.runnable;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -31,6 +32,8 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 	private final Logger log = Logger.getLogger(ZmqEasyQuotationChartRunnable.class);
 
+	public volatile boolean isOpen = true;
+
 	public ZmqEasyQuotationChartRunnable(MarketdataCandleChartRepository marketdataCandleChartRepository, RedisCacheUtil redisCacheUtil, String zmqUrl,
 			String title) {
 		this.marketdataCandleChartRepository = marketdataCandleChartRepository;
@@ -55,7 +58,7 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 
 			log.info(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 第一条数据：" + subscriber.recvStr());
 
-			while (true) {
+			while (isOpen) {
 
 				String msg = subscriber.recvStr();
 				String message = msg.substring(msg.lastIndexOf("{"));
@@ -159,13 +162,15 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 				}
 			}
 		} catch (Exception e) {
-			log.info(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");
-			e.printStackTrace();
+			log.error(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...", e);
 		} finally {
-			// subscriber.close();
-			// context.close();
+			subscriber.close();
+			context.close();
 		}
-
+		log.info(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 任务结束...");
+		if (ChartContainer.clearTimeMap()) {
+			log.info("timeMap已被清空..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
+		}
 		return null;
 	}
 

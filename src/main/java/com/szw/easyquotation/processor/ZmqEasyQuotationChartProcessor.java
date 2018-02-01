@@ -3,7 +3,6 @@ package com.szw.easyquotation.processor;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import com.szw.easyquotation.util.RedisCacheUtil;
 @Service
 public class ZmqEasyQuotationChartProcessor {
 
-	private ExecutorService threadPool = null;
+	private ExecutorService threadPool = Executors.newSingleThreadExecutor();;
 
 	@Autowired
 	private RedisCacheUtil<RealTimeMarketdata> redisCacheUtil;
@@ -35,35 +34,35 @@ public class ZmqEasyQuotationChartProcessor {
 
 	private final Logger log = Logger.getLogger(ZmqEasyQuotationChartProcessor.class);
 
+	private ZmqEasyQuotationChartRunnable task = null;
+
 	public void execute() {
-
+		task = new ZmqEasyQuotationChartRunnable(marketdataCandleChartRepository, redisCacheUtil, zmqUrl, title);
+		log.info("【线程池】" + threadPool.toString() + "提交任务...thread = " + task.toString());
 		try {
-			threadPool = Executors.newSingleThreadExecutor();
-			log.info("创建商户池：" + threadPool);
-			threadPool.submit(new ZmqEasyQuotationChartRunnable(marketdataCandleChartRepository, redisCacheUtil, zmqUrl, title));
-
+			threadPool.submit(task);
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// threadPool.shutdown();
+			log.error("【线程池】" + threadPool.toString() + "提交任务出现异常", e);
 		}
 	}
 
 	public boolean shutdown() {
 		log.info("调用ZmqEasyQuotationChartProcessor.shutdown()开始..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-		threadPool.shutdownNow();
+		// threadPool.shutdownNow();
+		task.isOpen = false;
 		// threadPool.shutdown();
-		try {
-			threadPool.awaitTermination(1, TimeUnit.HOURS);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			threadPool.isTerminated();
-		}
+		// try {
+		// threadPool.awaitTermination(1, TimeUnit.HOURS);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } finally {
+		// threadPool.isTerminated();
+		// }
 
 		log.info("调用ZmqEasyQuotationChartProcessor.shutdown()完成..." + DateUtil.format_yyyyMMddHHmmss(new Date()));
-		return threadPool.isShutdown();
+		// return threadPool.isShutdown();
+		return true;
 	}
 
 }
