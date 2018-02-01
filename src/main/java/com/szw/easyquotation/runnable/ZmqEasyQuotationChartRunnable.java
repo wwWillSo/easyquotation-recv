@@ -47,6 +47,8 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 		subscriber.connect(zmqUrl);
 		subscriber.subscribe(title.getBytes());
 
+		// Socket subscriber = ZMQRecv.getZMQRecver(zmqUrl, title);
+
 		try {
 
 			log.info(" [k线图线程" + Thread.currentThread().getId() + "] for " + title + " 接收数据中...");
@@ -160,8 +162,8 @@ public class ZmqEasyQuotationChartRunnable implements Callable<ZmqEasyQuotationC
 			log.info(" [线程" + Thread.currentThread().getId() + "] for " + title + " 报错...");
 			e.printStackTrace();
 		} finally {
-			subscriber.close();
-			context.close();
+			// subscriber.close();
+			// context.close();
 		}
 
 		return null;

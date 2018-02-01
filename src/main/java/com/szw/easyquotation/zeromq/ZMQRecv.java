@@ -1,5 +1,8 @@
 package com.szw.easyquotation.zeromq;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ.Socket;
@@ -7,28 +10,19 @@ import org.zeromq.ZMQ.Socket;
 
 public class ZMQRecv {
 
-	// public final static ConcurrentMap<String, Socket> subMap = new ConcurrentHashMap<String,
-	// Socket>();
+	public final static ConcurrentMap<String, Socket> socketMap = new ConcurrentHashMap<String, Socket>();
 
-	public static void main(String[] args) {
-		Context context = ZMQ.context(1);
-		Socket subscriber = context.socket(ZMQ.SUB);
-		subscriber.connect("tcp://localhost:5561");
+	public static Context context = ZMQ.context(1);
 
-		String title = "marketdata";
-
-		subscriber.subscribe(title.getBytes());
-		while (true) {
-
-			String msg = subscriber.recvStr();
-
-			String data = msg.substring(msg.lastIndexOf("{"));
-
-			System.out.println(data);
+	public static Socket getZMQRecver(String zmqUrl, String title) {
+		if (null == socketMap.get(zmqUrl + "-" + title)) {
+			Socket subscriber = context.socket(ZMQ.SUB);
+			subscriber.connect(zmqUrl);
+			subscriber.subscribe(title.getBytes());
+			socketMap.put(zmqUrl + "-" + title, subscriber);
 		}
-	}
 
-	// public static Socket getSubscriber(String title) {
-	// Socket subscriber = subMap.get(title) ;
-	// }
+		return socketMap.get(zmqUrl + "-" + title);
+
+	}
 }
