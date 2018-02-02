@@ -51,7 +51,7 @@ function genKLineChart(stockcode, chartType) {
 	
 	//取得股票名称
 	$.ajax({
-		url:'http://39.108.179.2:8080/getMarketdataByCode/' + stockcode ,
+		url:common.http_marketdata_code + stockcode ,
 		async:false ,
 		dataType:'json',
 		success:function (result) {
@@ -63,7 +63,7 @@ function genKLineChart(stockcode, chartType) {
 		}
 	})
 	
-	url = 'http://39.108.179.2:8080/retrieveKChart/'+stockcode+'/'+chartType
+	url = common.http_kChart_code_chartType + stockcode+'/'+chartType
 	console.log(url)
 	genChart(url)
 }

@@ -24,7 +24,7 @@ function heart() {
 
 }
 
-var url = 'ws://39.108.179.2:8080/optionalDeepSocketServer'
+var url = common.websocket_marketdata
 var ws = new WebSocket(url);
 
 //用于自由地 send socket topic
