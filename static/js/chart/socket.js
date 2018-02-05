@@ -2,19 +2,6 @@
 
 var heartflag = false;
 
-function parseObj(strData) { 
-	return (new Function("return " + strData))();
-};
-
-function GetPercent(num, total) { 
-	num = parseFloat(num); 
-	total = parseFloat(total); 
-	if (isNaN(num) || isNaN(total)) { 
-		return "-"; 
-	} 
-	return total <= 0 ? "0%" : (Math.round(num / total * 10000) / 100.00 + "%"); 
-} 
-
 function heart() {
     if (heartflag){
     	
@@ -41,8 +28,8 @@ ws.onopen = function()
 };
 ws.onmessage = function(evt)
 {
-	var data = parseObj(evt.data).text
-	data = parseObj(data)
+	var data = common.parseObj(evt.data).text
+	data = common.parseObj(data)
 	console.log(data)
 
 	$('#sell5 td').eq(1).text(data.ask5)
@@ -80,7 +67,7 @@ ws.onmessage = function(evt)
 	var percent = 0
 	
 	if (data.open != 0) {
-		percent = GetPercent(data.now - data.close, data.close)
+		percent = common.GetPercent(data.now - data.close, data.close)
 	} else {
 		percent = "停牌中";
 	}

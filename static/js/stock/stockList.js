@@ -1,6 +1,5 @@
 ;
 $(document).ready(function(){
-	
 	var table = 'stock-list-table'
 	
 	addStockTr(table) 

@@ -32,6 +32,11 @@ $('#login_confirm').click(function (e) {
 				var seconds=1*60*60;
 				locache.set("sessionId",data["sessionId"],seconds);
 				sessionStorage.setItem("session",data["sessionId"]);
+//				locache.set("JSESSIONID",data["sessionId"],seconds);
+//				sessionStorage.setItem("JSESSIONID",data["sessionId"]);
+				
+				//添加cookie
+//				document.cookie="JSESSIONID="+data["sessionId"];
 				
 				layer.confirm('登录成功！')
 			   	window.location.href="pc/stockList.html";

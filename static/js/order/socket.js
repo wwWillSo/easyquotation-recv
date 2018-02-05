@@ -48,16 +48,18 @@ ws.onmessage = function(evt)
 {
 	var data = common.parseObj(evt.data).text
 	data = common.parseObj(data)
-	
-//	console.log(data)
-	
-	var oldDataNow = $('.' + data.stockcode + '-now').text()
-	
-	if (data.now > oldDataNow) {
-		$('.' + data.stockcode + '-now').html("<font color='red'>" + data.now + "</font>")
-	} else if (data.now < oldDataNow) {
-		$('.' + data.stockcode + '-now').html("<font color='green'>" + data.now + "</font>")
-	}
+	$('.'+data.stockcode+'-order-tr').each(function() {
+		if ($(this).find('.status').text() == '已成交') {
+			var orderPrice = $(this).find('.orderPrice').text()
+			var orderHand = $(this).find('.orderHand').text()
+			var winLoss = common.floatMul(common.floatSub(data.now, orderPrice), orderHand)
+			if (data.now > orderPrice) {
+				$(this).find('.winLoss').html("<font color='red'>" + winLoss + "</font>")
+			} else {
+				$(this).find('.winLoss').html("<font color='green'>" + winLoss + "</font>")
+			}
+		}
+	})
 };
 ws.onclose = function(evt)
 {

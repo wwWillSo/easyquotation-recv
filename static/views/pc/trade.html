@@ -44,13 +44,19 @@
 		  </label>
 	  </div>
 	  <div class="form-group">
+	    <label for="orderPrice" class="col-md-2 control-label">买入价格</label>
+	    <div class="col-md-10">
+	      <input type="text" class="form-control" id="orderPrice" name="orderPrice" placeholder="买入价格" readonly="readonly"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
 	  	  <label for="orderSide" class="col-md-2 control-label">订单方向</label>
 		  <label class="radio-inline">
-			  <input type="radio" name="orderSide" value="0"> 买入
+			  <input type="radio" name="orderSide" value="0" checked="checked"> 买入
 		  </label>
-		  <label class="radio-inline">
-		  	  <input type="radio" name="orderSide" value="1"> 卖出
-		  </label>
+<!-- 		  <label class="radio-inline"> -->
+<!-- 		  	  <input type="radio" name="orderSide" value="1"> 卖出 -->
+<!-- 		  </label> -->
 	  </div>
 	  <div class="form-group">
 	    <label for="orderHand" class="col-md-2 control-label">数量</label>
@@ -58,11 +64,10 @@
 	      <input type="text" class="form-control" id="orderHand" name="orderHand" placeholder="手数"/>
 	    </div>
 	  </div>
-	  <div class="form-group">
-	    <div class="col-md-offset-2 col-md-10">
-	      <button type="button" class="btn btn-default" id="trade_confirm">确认订单</button>
-	    </div>
-	  </div>
+      <div class="col-md-offset-2 col-md-10">
+        <button type="button" class="btn btn-default" id="trade_confirm">确认订单</button>
+        <button type="button" class="btn btn-default" id="go-back" onclick="javascript:history.go(-1);">返回</button>
+      </div>
 	</form>
 
     <script src="../../plugins/jquery/jquery-1.11.3.min.js"></script>
