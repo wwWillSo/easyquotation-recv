@@ -130,6 +130,7 @@ function addStockTr(tab) {
 				"<td>" + stock.low + "</td>" +
 				"<td>" + stock.high + "</td>" +
 				"<td class='" + stock.stockcode + '-now' + "'>" + stock.now + "</td>" +
+				"<td><a href='trade.html" + "?name=" + stock.stockcode + "'>下单</a></td>" + 
 				"</tr>"
 		
 		addTr(tab, i, trHtml)

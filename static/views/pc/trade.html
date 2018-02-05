@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--将下面的<meta> 标签加入到页面中，可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>股票系统</title>
+    <meta name="keywords" content="股票系统"/>
+    <meta name="description" content=""/>
+    <!--favicon-->
+    <link rel="icon" href="../../images/favicon-WillSo.ico" type="image/x-icon" />
+    <!-- <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon" /> -->
+    <!--如果想收藏书签也有Favicon.ico图标，在上面那段代码下面加入-->
+    <!-- <link rel="Bookmark" href="/images/favicon.ico" type="image/x-icon" /> -->
+
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.5-dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.5-dist/css/bootstrap-theme.css"/>
+    
+    <!--global css-->
+    <link rel="stylesheet" type="text/css" href="../../css/global.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/index/index.css"/>
+    <link rel="stylesheet" href="../../plugins/jquery-sidebar/css/sidebar-menu.css"/>
+</head>
+<body>
+	
+	<form style="padding-top:13%;" id="tradeForm" action="" class="col-md-6 col-md-offset-3" method="post">
+	  <div class="form-group">
+	    <label for="stockcode" class="col-md-2 control-label">股票代码</label>
+	    <div class="col-md-10">
+	      <input type="text" class="form-control" id="stockcode" name="stockcode" placeholder="股票代码" readonly="readonly"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	  	  <label for="orderType" class="col-md-2 control-label">订单类型</label>
+		  <label class="radio-inline">
+			  <input type="radio" name="orderType" value="0"> 市价单
+		  </label>
+		  <label class="radio-inline">
+		  	  <input type="radio" name="orderType" value="1"> 限价单
+		  </label>
+	  </div>
+	  <div class="form-group">
+	  	  <label for="orderSide" class="col-md-2 control-label">订单方向</label>
+		  <label class="radio-inline">
+			  <input type="radio" name="orderSide" value="0"> 买入
+		  </label>
+		  <label class="radio-inline">
+		  	  <input type="radio" name="orderSide" value="1"> 卖出
+		  </label>
+	  </div>
+	  <div class="form-group">
+	    <label for="orderHand" class="col-md-2 control-label">数量</label>
+	    <div class="col-md-10">
+	      <input type="text" class="form-control" id="orderHand" name="orderHand" placeholder="手数"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <div class="col-md-offset-2 col-md-10">
+	      <button type="button" class="btn btn-default" id="trade_confirm">确认订单</button>
+	    </div>
+	  </div>
+	</form>
+
+    <script src="../../plugins/jquery/jquery-1.11.3.min.js"></script>
+    <script src="../../plugins/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+    <script src="../../plugins/locache/locache.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/trade/trade.js"></script>
+</body>
+</html>

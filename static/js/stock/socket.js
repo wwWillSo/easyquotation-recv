@@ -62,7 +62,7 @@ ws.onmessage = function(evt)
 	var data = parseObj(evt.data).text
 	data = parseObj(data)
 	
-	console.log(data)
+//	console.log(data)
 	
 	var oldDataNow = $('.' + data.stockcode + '-now').text()
 	
