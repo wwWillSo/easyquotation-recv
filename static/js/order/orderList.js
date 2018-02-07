@@ -2,6 +2,8 @@
 $(document).ready(function(){
 	var table = 'order-list-table'
 		
+	console.log(table)
+		
 	if (!common.isLogin()) {
 		layer.alert('未登录！')
 		window.location.href = '/'
@@ -68,55 +70,97 @@ $(document).ready(function(){
 		emptyTable(table)
 		addStockTr(table)
 	})
-	
-	$('.sell').click(function (e) {
-		e.preventDefault()
-		var order_tr = $(this).parent().parent()
-		var stockCode = $(order_tr).find('.stockCode').text()
-		var orderHand = $(order_tr).find('.orderHand').text()
-		var orderType = 0
-		var orderSide = 1
-		var offsetOrderNo = $(order_tr).find('.orderNo').text()
-		
-		var req = {
-			"stockCode" : stockCode,
-			"orderHand" : orderHand,
-			"orderType" : orderType,
-			"orderSide" : orderSide,
-			"offsetOrderNo" : offsetOrderNo
-		}
-		
-		var resp = null 
-		$.ajax({
-			url:common.http_trade_api + ";jsessionid=" + locache.get("sessionId"),
-			contentType:"application/json",
-			type:'POST',
-			data:JSON.stringify(req),
-			dataType:'json',
-			async:false,
-			success:function (result) {
-				console.log(result)
-				if (result._ReturnCode == '0000') {
-					layer.msg('下单请求已提交！', {
-						   time: 0
-						   ,btn: ['查看订单', '查看股票']
-						   ,btn1: function(index, layero){
-							   window.location.href = 'orderList.html'
-						   }
-						   ,btn2: function(index, layero){
-							  window.location.href = 'stockList.html'
-						  }
-						});
-				} else {
-					layer.alert('下单请求提交失败！')
-				}
-			},
-			error:function(e) {
-				console.log(e)
-			}
-		})
-	}) 
 })
+
+function sellBtn(tr) {
+	var order_tr = $(tr).parent().parent()
+	var stockCode = $(order_tr).find('.stockCode').text()
+	var orderHand = $(order_tr).find('.orderHand').text()
+	var orderType = 0
+	var orderSide = 1
+	var offsetOrderNo = $(order_tr).find('.orderNo').text()
+	
+	var req = {
+		"stockCode" : stockCode,
+		"orderHand" : orderHand,
+		"orderType" : orderType,
+		"orderSide" : orderSide,
+		"offsetOrderNo" : offsetOrderNo
+	}
+	
+	console.log(req)
+	
+	var resp = null 
+	$.ajax({
+		url:common.http_trade_api + ";jsessionid=" + locache.get("sessionId"),
+		contentType:"application/json",
+		type:'POST',
+		data:JSON.stringify(req),
+		dataType:'json',
+		async:false,
+		success:function (result) {
+			console.log(result)
+			if (result._ReturnCode == '0000') {
+				layer.msg('下单请求已提交！', {
+					   time: 0
+					   ,btn: ['查看订单', '查看股票']
+					   ,btn1: function(index, layero){
+						   window.location.href = 'orderList.html'
+					   }
+					   ,btn2: function(index, layero){
+						  window.location.href = 'stockList.html'
+					  }
+					});
+			} else {
+				layer.alert('下单请求提交失败！')
+			}
+		},
+		error:function(e) {
+			console.log(e)
+		}
+	})
+}
+
+function cancelBtn(tr) {
+	var order_tr = $(tr).parent().parent()
+	var cancelOrderNo = $(order_tr).find('.orderNo').text()
+	
+	var req = {
+		"cancelOrderNo" : cancelOrderNo
+	}
+	
+	console.log(req)
+	
+	var resp = null 
+	$.ajax({
+		url:common.http_cancel_api + ";jsessionid=" + locache.get("sessionId"),
+		contentType:"application/json",
+		type:'POST',
+		data:JSON.stringify(req),
+		dataType:'json',
+		async:false,
+		success:function (result) {
+			console.log(result)
+			if (result._ReturnCode == '0000') {
+				layer.msg('取消单请求已提交！', {
+					   time: 0
+					   ,btn: ['查看订单', '查看股票']
+					   ,btn1: function(index, layero){
+						   window.location.href = 'orderList.html'
+					   }
+					   ,btn2: function(index, layero){
+						  window.location.href = 'stockList.html'
+					  }
+					});
+			} else {
+				layer.alert('取消单请求提交失败！')
+			}
+		},
+		error:function(e) {
+			console.log(e)
+		}
+	})
+}
 
 function setPageNo(i) {
 	
@@ -190,10 +234,13 @@ function addStockTr(tab) {
 				"<td>" + order.updateTime + "</td>" +
 				"<td class='status'>" + order.status + "</td>" +
 				"<td class='winLoss'>" + order.winLoss + "</td>" +
-				"<td><a class='sell'>卖出</a></td>" + 
+				"<td><a class='sell' onclick='sellBtn(this)'>卖出</a>&nbsp;&nbsp;<a class='cancel' onclick='cancelBtn(this)'>取消</a></td>" + 
 				"</tr>"
 		
 		addTr(tab, i, trHtml)
+		
+//		console.log(i)
+//		console.log(trHtml)
 	}
 	
 	$('#page-span').text(pageNo + '/' + lastPageNo)

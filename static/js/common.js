@@ -17,6 +17,8 @@ window.common = (function () {
 	common.http_orderList_all = 'http://localhost:8080/api/customer/queryOrder' ;
 	/** 下单接口*/
 	common.http_trade_api = 'http://localhost:8080/api/customer/createOrder' ;
+	/** 取消单接口*/
+	common.http_cancel_api = "http://localhost:8080/api/customer/cancelOrder" ;
 	
 	
 	/**
@@ -103,6 +105,7 @@ window.common = (function () {
 		case 2 : order.status = '已成交' ; break ;
 		case 3 : order.status = '交易失败' ; break ;
 		case 4 : order.status = '已平仓' ; break ;
+		case 5 : order.status = '已取消' ; break ;
 		}
 		return order ;
 	}
