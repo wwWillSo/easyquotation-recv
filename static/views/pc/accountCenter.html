@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <!--将下面的<meta> 标签加入到页面中，可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>账户中心</title>
+    <meta name="keywords" content="账户中心"/>
+    <meta name="description" content=""/>
+    <!--favicon-->
+    <link rel="icon" href="../../images/favicon-WillSo.ico" type="image/x-icon" />
+    <!-- <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon" /> -->
+    <!--如果想收藏书签也有Favicon.ico图标，在上面那段代码下面加入-->
+    <!-- <link rel="Bookmark" href="/images/favicon.ico" type="image/x-icon" /> -->
+
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.5-dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.5-dist/css/bootstrap-theme.css"/>
+</head>
+<style>
+	.page {
+		text-align: center;
+		width:100%;
+	}
+	.keyword {
+		display:inline;
+		width:60%;
+	}
+	.search-btn {
+		width:30%;
+	}
+	#stock-list-table {
+	
+	}
+	td {
+	}
+</style>
+<body>
+	<div id="header"></div>
+	<div class="container-fluid">
+		<div class=""> 
+			<table id="account-table" class="table table-condensed table-bordered table-striped">
+				<tr class="first-line">
+					<td>冻结资金</td>
+					<td>可用余额</td>
+					<td>总资产</td>
+				</tr>
+			</table>
+			
+			<h3>持仓列表</h3>
+			<table id="investment-summary" class="table table-condensed table-bordered table-striped">
+				<tr class="first-line">
+					<td>股票代码</td>
+					<td>冻结余额</td>
+					<td>手数</td>
+					<td>盈亏</td>
+				</tr>
+			</table>
+		</div>
+		
+		<form class="form-inline page">
+			<button type="button" class="btn default-btn first-page-btn">&lt;&lt;</button>
+			<button type="button" class="btn default-btn prev-page-btn">&lt;</button>
+			<span id="page-span"></span>
+			<button type="button" class="btn default-btn next-page-btn">&gt;</button>
+			<button type="button" class="btn default-btn last-page-btn">&gt;&gt;</button>
+		</form>
+	</div>
+	
+	<input type="hidden" class="pageNo" name="pageNo" value="1"/>
+	<input type="hidden" class="pageSize" name="pageSize" value="20"/>
+	<input type="hidden" class="lastPageNo"/>
+	
+    <script src="../../plugins/jquery/jquery-1.11.3.min.js"></script>
+    <script src="../../plugins/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+    <script src="../../plugins/locache/locache.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/header.js"></script>
+    <script src="../../js/account/account.js"></script>
+</body>
+</html>

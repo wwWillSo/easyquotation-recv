@@ -19,7 +19,10 @@ window.common = (function () {
 	common.http_trade_api = 'http://localhost:8080/api/customer/createOrder' ;
 	/** 取消单接口*/
 	common.http_cancel_api = "http://localhost:8080/api/customer/cancelOrder" ;
-	
+	/** 查询持仓接口*/
+	common.http_investmentSummary_api = "http://localhost:8080/api/customer/queryInvestmentSummary" ;
+	/** 查询账户接口*/
+	common.http_account_api = "http://localhost:8080/api/customer/queryAccount" ;
 	
 	/**
 	 * 加 
