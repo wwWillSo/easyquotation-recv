@@ -11,6 +11,8 @@ window.common = (function () {
 	common.http_kChart_code_chartType = 'http://39.108.179.2:8080/retrieveKChart/' ;
 	/** 用户登录接口*/
 	common.http_userLogin = 'http://localhost:8080/userLogin' ;
+	/** 用户注册接口*/
+	common.http_userRegister = 'http://localhost:8080/api/public/userRegister' ;
 	/** 用户密码加密接口*/
 	common.http_passwordTransformer = 'http://localhost:8080/api/public/passwordTransformer/' ;
 	/** 查询订单列表接口*/
